@@ -1,9 +1,15 @@
 package Utils;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 public class PrintUtils {
     public static void printCollection(Collection c) {
+        c.forEach(i -> System.out.println(i + ","));
+    }
+
+    public static <T> void printCollection(T[] a) {
+        Collection c = Arrays.asList(a);
         c.forEach(i -> System.out.println(i + ","));
     }
 

@@ -37,6 +37,8 @@ public class Tree {
             }
         }
         if(!alreadyChild) {
+            if(this.children == null)
+                this.children = new ArrayList<Tree>();
             this.children.add(child);
         }
     }
@@ -45,6 +47,9 @@ public class Tree {
         used++;
     }
 
+    public void addChild(Tree buildTree) {
+        addChild(buildTree.getChildren(), buildTree.getKw(), buildTree.isTerminal(), buildTree.getType());
+    }
 
     //--------------------------------------------------------------
     public List<Tree> getChildren() {
@@ -70,4 +75,21 @@ public class Tree {
     public LudemeType getType() {
         return type;
     }
+
+    public String toString() {
+        if(isTerminal) {
+            return kw;
+        } else {
+            if(children.isEmpty())
+                return kw+"";
+            String s = kw+"{";
+            for(Tree c : children) {
+                if(c != null)
+                    s += c.toString() + " ";
+            }
+            return s.substring(0,s.length()-1)+"}";
+        }
+    }
+
+
 }
