@@ -12,28 +12,62 @@ import java.util.List;
 
 public class Parser {
 
-    // TODO: should return a Tree
-    public static String[] parse(File f) throws FileNotFoundException {
+    public static Tree parse(File f) throws FileNotFoundException {
         Tree root = new Tree(null, "root", false, LudemeType.ROOT);
         String contents = FileUtils.getContents(f);
         System.out.println(contents);
         contents = PrintUtils.insertSpaceAroundBrackets(contents);
         System.out.println("HI"+contents);
         String[] ludemes = splitIntoSubLudemes(contents);
-        String[][] sub = new String[ludemes.length][];
+        Tree[] t = null;
         // run through the whole string, need to make tree
-        for(int i = 0; i < 1; i++) {
+        for(int i = 0; i < ludemes.length; i++) {
             //each ludeme becomes a tree, that is a child to the current tree
             String cur = ludemes[i];
-            //remove outer braces
-            cur = cur.substring(1,cur.length());
-            //System.out.println(cur);
-            //split into sub ludemes
-            sub[i] = splitIntoSubLudemes2(cur);
-            PrintUtils.printCollection(Arrays.asList(sub));
+            root.addChild(buildTree(cur));
         }
-        //TODO: make recursive and parse into a tree
-        return sub[0];
+        return root;
+    }
+
+    public static Tree buildTree(String contents) {
+        Tree t = null;
+        if(contents == "")
+            return null;
+        LudemeType type = classify(contents.charAt(0));
+        if(type == LudemeType.LUDEME) {
+            //removes () around ludeme
+            contents = contents.substring(1,contents.length());
+
+            String[] sub = splitIntoSubLudemes2(contents);
+            System.out.println("-----------------------------------------");
+            System.out.println(contents);
+            System.out.println(" ");
+            PrintUtils.printCollection(Arrays.asList(sub));
+            System.out.println("---");
+            List<Tree> children = new ArrayList<Tree>();
+            for(int i = 1; i < sub.length; i++) {
+                children.add(buildTree(sub[i]));
+            }
+            t = new Tree(children, sub[0], false, type);
+
+        } else if(type == LudemeType.COLLECTION) {
+            //removes {} around collection
+            contents = contents.substring(1,contents.length() - 1);
+
+            String[] sub = splitIntoSubLudemes2(contents);
+
+            List<Tree> children = new ArrayList<Tree>();
+            for(int i = 0; i < sub.length; i++) {
+                children.add(buildTree(sub[i]));
+            }
+            t = new Tree(children, "collection", false, type);
+        }
+        else if(type == LudemeType.KEYWORD || type == LudemeType.NUMBER
+                || type == LudemeType.PARAMETER || type == LudemeType.STRING) {
+            //no subdivision necessary
+            t = new Tree(null, contents, true, type);
+        }
+        return t;
     }
 
     /**
@@ -99,6 +133,8 @@ public class Parser {
      * @return
      */
     public static String[] splitIntoSubLudemes2(String contents) {
+        boolean debug = false;
+
         //step 1: search for first ')'
         List<String> ludemes = new ArrayList<>();
         int i = 0;
@@ -126,12 +162,12 @@ public class Parser {
                 }
             }
             else if(foundFirst){
-                System.out.println(foundType);
+                if(debug) System.out.println(foundType);
                 switch (foundType) {
                     case LUDEME:
                         //need to find ')'
                         //keep track of nesting
-                        System.out.println("nesting "+nestingLevel);
+                        if(debug)System.out.println("nesting "+nestingLevel);
                         if(cur == '(')
                             nestingLevel++;
                         if(cur == ')') {
@@ -180,28 +216,30 @@ public class Parser {
                 }
                 if(foundSecond) {
                     ludemes.add(contents.substring(start,end));
-                    System.out.println(i + " " + cur + " 1.:" + foundFirst + " 2.:" + foundSecond);
-                    PrintUtils.printCollection(ludemes);
-                    System.out.println("FOUND: " + contents.substring(start,end));
+                    if(debug)System.out.println(i + " " + cur + " 1.:" + foundFirst + " 2.:" + foundSecond);
+                    if(debug)PrintUtils.printCollection(ludemes);
+                    if(debug)System.out.println("FOUND: " + contents.substring(start,end));
                     start = -1;
                     end = -1;
                     foundFirst = false;
                     foundSecond = false;
                 } else {
-                    System.out.println(i + " " + cur + " 1.:" + foundFirst + " 2.:" + foundSecond);
-                    PrintUtils.printCollection(ludemes);
+                    if(debug)System.out.println(i + " " + cur + " 1.:" + foundFirst + " 2.:" + foundSecond);
+                    if(debug)PrintUtils.printCollection(ludemes);
                     if(foundFirst) {
-                        System.out.println("CURRENT SELECTION: " + contents.substring(start, i + 1));
+                        if(debug)System.out.println("CURRENT SELECTION: " + contents.substring(start, i + 1));
                     }  else {
-                        System.out.println("SEARCHING");
+                        if(debug)System.out.println("SEARCHING");
                     }
                 }
 
-                System.out.println(" ");
+                if(debug)System.out.println(" ");
             }
             i++;
         }
         //check if there is still an open ludeme
+        if(foundFirst)
+            ludemes.add(contents.substring(start,contents.length()-1));//REMOVE LAST CHAR
 
         PrintUtils.printCollection(ludemes);
         return ludemes.toArray(String[]::new);

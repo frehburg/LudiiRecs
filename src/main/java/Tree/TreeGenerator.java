@@ -9,13 +9,14 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class TreeGenerator {
+    public static final String TIC_TAC_TOE_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\Tic-Tac-Toe.lud";
     public static void main(String[] args) {
         try {
-            File ticTacToe = new File("C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\Tic-Tac-Toe.lud");
-            String[] a = Parser.parse(ticTacToe);
-            System.out.println("-------------------------------------------------");
-            PrintUtils.printCollection(Arrays.asList(a));
-            System.out.println("-------------------------------------------------");
+            File f = new File(TIC_TAC_TOE_PATH);
+            Tree t = Parser.parse(f);
+            System.out.println("");
+            System.out.println("------------------------------------------------------------------------------------");
+            System.out.println(t.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
