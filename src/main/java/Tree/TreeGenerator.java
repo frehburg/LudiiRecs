@@ -32,6 +32,9 @@ public class TreeGenerator {
 
         //creates a list of all directories containing .lud files
         dotLudFiles = searchDotLudFiles();
+        for(File f : dotLudFiles) {
+            //TODO: Add functionality to parse multiple files into one tree
+        }
     }
 
     /**
