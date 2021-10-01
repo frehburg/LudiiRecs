@@ -7,7 +7,7 @@ In this repository i am going to create a recommender for coding in the Ludii ga
 ## Features
 - Parser of the Ludii language: Builds tree objects from .lud files that represent the structure of the game file
 - Algorithm to gather all .lud files
-- Example: Graph resulting from parsing [Tic-Tac-Toe.lud](https://github.com/frehburg/LudiiRecs/blob/main/res/Tic-Tac-Toe.lud)
+- Example: Graph resulting from parsing [Tic-Tac-Toe.lud](https://github.com/frehburg/LudiiRecs/blob/main/res/Tic-Tac-Toe.lud), metadata is also getting parsed but not visualized in this example.
 
 [Example Graph](https://github.com/frehburg/LudiiRecs/blob/main/res/pictures/Example/Tic-Tac-Toe%20graph%20example.png)
 
