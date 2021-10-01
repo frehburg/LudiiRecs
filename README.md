@@ -25,9 +25,9 @@ Now you are ready to go
 
 ## Run
 After installing, the program can be run in the following way:
-1. Go to TreeGenerator.java
-2. In main() set the path of File f to the .lud file that you want to parse
-3. Execute TreeGenerator.main() 
+1. Go to `TreeGenerator.java`
+2. In `main()` set the path of `File f` to the .lud file that you want to parse
+3. Execute `TreeGenerator.main()` 
 4. The tree built from the .lud file will be printed into the console
 
 [![Ludii](https://ludii.games/images/logo-clover-c-border.gif)](https://ludii.games/index.php)
