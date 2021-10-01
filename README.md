@@ -14,8 +14,8 @@ To install this project you will need
 - [Java](https://www.java.com/) - Java JDK 15 or newer
 - [Maven](https://maven.apache.org/) - Apache Maven
 
-To install Java follow this guide [JavaGuide](https://www.java.com/en/download/help/windows_manual_download.html)
-To install Maven follow this guide [MVNGuide](https://maven.apache.org/guides/getting-started/)
+- To install Java follow this [guide](https://www.java.com/en/download/help/windows_manual_download.html)
+- To install Maven follow this [guide](https://maven.apache.org/guides/getting-started/)
 
 ## Run
 After installing, the program can be run in the following way:
