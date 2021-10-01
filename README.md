@@ -20,7 +20,7 @@ To install this project you will need
 - [Maven](https://maven.apache.org/) - Apache Maven
 - To install Maven follow this [guide](https://maven.apache.org/guides/getting-started/)
 - Open the project in your favorite IDE as a maven project
-- run mvn package on command line in the directory C:/.../LudiiRecs/ to install all dependencies
+- run `mvn package` on command line in the directory C:/.../LudiiRecs/ to install all dependencies
 Now you are ready to go
 
 ## Run
