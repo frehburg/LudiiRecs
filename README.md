@@ -8,6 +8,8 @@ In this repository i am going to create a recommender for coding in the Ludii ga
 - Parser of the Ludii language: Builds tree objects from .lud files that represent the structure of the game file
 - Algorithm to gather all .lud files
 
+[![Example Graph](https://github.com/frehburg/LudiiRecs/blob/main/res/pictures/Example/Tic-Tac-Toe%20graph%20example.png)
+
 
 ## Planning
 - Statistical analysis of all .lud files to enable first recommendation
