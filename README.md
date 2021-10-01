@@ -1,5 +1,8 @@
 # LudiiRecs
-In this repository i am going to create a recommender system for coding in the Ludii general game system. The Ludii GGS is part of the Digital Ludeme Project, which under the leadership of C. Browne received a 2m€ [ERC Consolidator Grant](https://erc.europa.eu/news/erc-2017-consolidator-grants-results) (#771292). I am a second year Bachelors studnt at the University Maastricht, where I study Data Science and Artificial Intelligence and particpate in the Honours programme of said study. I chose the research based MaRBLe 2.0 branch of the Honours programme, which enabled me to work on the Digital Ludeme Project under the supervision of C. Browne and his team.
+In this repository i am going to create a recommender system for coding in the Ludii general game system. The Ludii GGS is part of the Digital Ludeme Project, which under the leadership of C. Browne received a 2m€ [ERC Consolidator Grant](https://erc.europa.eu/news/erc-2017-consolidator-grants-results) (#771292). 
+
+## About me
+I am a second year Bachelors student at the University Maastricht, where I study Data Science and Artificial Intelligence and particpate in the Honours programme of said study. I chose the research based MaRBLe 2.0 branch of the Honours programme, which enabled me to work on the Digital Ludeme Project under the supervision of C. Browne and his team.
 
 For more information about the above mentioned projects, please follow these links:
 - [Digital Ludeme Project](http://ludeme.eu/index.html) 
