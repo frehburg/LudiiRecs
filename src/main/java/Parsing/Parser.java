@@ -12,13 +12,16 @@ import java.util.List;
 
 public class Parser {
 
+    /**
+     * // TODO: add comment
+     * @param f
+     * @return
+     * @throws FileNotFoundException
+     */
     public static Tree parse(File f) throws FileNotFoundException {
         Tree root = new Tree(null, "root", false, LudemeType.ROOT);
         String contents = FileUtils.getContents(f);
-        System.out.println(contents);
-        contents = PrintUtils.insertSpaceAroundBrackets(contents);
-        System.out.println("HI"+contents);
-        String[] ludemes = splitIntoSubLudemes(contents);
+        String[] ludemes = firstSplit(contents);
         Tree[] t = null;
         // run through the whole string, need to make tree
         for(int i = 0; i < ludemes.length; i++) {
@@ -29,6 +32,19 @@ public class Parser {
         return root;
     }
 
+    /**
+     * This method takes a string contents, which is expected to be a compilable ludii expression.
+     * It then splits it into it´s sub-parts and creates a tree, how depends on the type of the ludeme.
+     * If it is a ..., the root is a node
+     * Ludeme -> with the ludeme keyword as root and all its parameters as children (not terminal),
+     * Collection -> "collection" with all elements of the collection as children (not terminal),
+     * Keyword, Number, Parameter, String -> a node containing the affore mentioned without children (terminal)
+     *
+     * To achieve having Tree objects as children, the method first recursively calls itself on the relevant sub-parts
+     * and then passes the resulting tree objects.
+     * @param contents
+     * @return the ludii expression in contents parsed as a Tree
+     */
     public static Tree buildTree(String contents) {
         Tree t = null;
         if(contents == "")
@@ -38,7 +54,7 @@ public class Parser {
             //removes () around ludeme
             contents = contents.substring(1,contents.length());
 
-            String[] sub = splitIntoSubLudemes2(contents);
+            String[] sub = splitIntoSubLudemes(contents);
             System.out.println("-----------------------------------------");
             System.out.println(contents);
             System.out.println(" ");
@@ -54,7 +70,7 @@ public class Parser {
             //removes {} around collection
             contents = contents.substring(1,contents.length() - 1);
 
-            String[] sub = splitIntoSubLudemes2(contents);
+            String[] sub = splitIntoSubLudemes(contents);
 
             List<Tree> children = new ArrayList<Tree>();
             for(int i = 0; i < sub.length; i++) {
@@ -72,10 +88,18 @@ public class Parser {
 
     /**
      * Only works if all subs are ludemes with () around them
+     * Takes the contents of a .lud file, applies preprocessing and then splits it into ludemes, while correcting spacing
+     * and removing comments.
+     * Results in a String array with each String being either
+     * - the game ludeme,
+     * - the metadata ludeme or
+     * - a define ludeme.
+     *
      * @param contents
-     * @return
+     * @return String array of ludemes in .lud file contents string
      */
-    public static String[] splitIntoSubLudemes(String contents) {
+    public static String[] firstSplit(String contents) {
+        contents = PrintUtils.insertSpaceAroundBrackets(contents);
         //step 1: search for first ')'
         int nestingLevel = -1; // root is not actually part of the tree
         int startNestingLevel = 0;
@@ -132,7 +156,7 @@ public class Parser {
      * @param contents
      * @return
      */
-    public static String[] splitIntoSubLudemes2(String contents) {
+    public static String[] splitIntoSubLudemes(String contents) {
         boolean debug = false;
 
         //step 1: search for first ')'
@@ -245,7 +269,19 @@ public class Parser {
         return ludemes.toArray(String[]::new);
     }
 
+    /**
+     * This method classifies a ludeme into one of the six following categories:
+     * - Ludeme,
+     * - Collection,
+     * - String,
+     * - Parameter or
+     * - Number
+     * according to its first character.
+     * @param c first character of an expression
+     * @return The type of the ludeme
+     */
     public static LudemeType classify(char c) {
+        // TODO: improve efficiency by using if with ranges
         switch (c) {
             case '(': return LudemeType.LUDEME;
             case '{': return LudemeType.COLLECTION;
