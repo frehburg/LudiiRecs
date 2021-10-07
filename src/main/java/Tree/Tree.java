@@ -1,6 +1,7 @@
 package Tree;
 
 import Parsing.LudemeType;
+import Parsing.PreLudemeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +13,11 @@ public class Tree {
     private final String kw;
     private int used;
     private final boolean isTerminal;
-    private LudemeType type;
+    // TODO: Change back to LudemeType when ready
+    private PreLudemeType type;
+    //TODO: add preferred: count * at the end of the keyword
 
-    public Tree(List<Tree> children, String kw, boolean isTerminal, LudemeType type) {
+    public Tree(List<Tree> children, String kw, boolean isTerminal, /*TODO: Change back to LudemeType when ready*/PreLudemeType type) {
         this.type = type;
         this.children = children;
         if(children == null)
@@ -25,7 +28,7 @@ public class Tree {
         used = 1;
     }
 
-    public void addChild(List<Tree> children, String kw, boolean isTerminal, LudemeType type) {
+    public void addChild(List<Tree> children, String kw, boolean isTerminal, /*TODO: Change back to LudemeType when ready*/PreLudemeType type) {
         Tree child = new Tree(children, kw, isTerminal, type);
         boolean alreadyChild = false;
         one:for(int i = 0; i < children.size(); i++) {
@@ -71,8 +74,8 @@ public class Tree {
     public int getUsed() {
         return used;
     }
-
-    public LudemeType getType() {
+    /*TODO: Change back to LudemeType when ready*/
+    public /*TODO: Change back to LudemeType when ready*/PreLudemeType getType() {
         return type;
     }
 

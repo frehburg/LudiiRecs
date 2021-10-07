@@ -10,6 +10,7 @@ import java.util.*;
 
 public class TreeGenerator {
     public static final String TIC_TAC_TOE_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\Tic-Tac-Toe.lud";
+    public static final String SUDOKU_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\Ludii\\lud\\puzzle\\deduction\\Sudoku.lud";
     public static void main(String[] args) {
         try {
             File f = new File(TIC_TAC_TOE_PATH);

@@ -19,7 +19,7 @@ public class Parser {
      * @throws FileNotFoundException
      */
     public static Tree parse(File f) throws FileNotFoundException {
-        Tree root = new Tree(null, "root", false, LudemeType.ROOT);
+        Tree root = new Tree(null, "root", false, /*TODO: Change back to LudemeType when ready*/PreLudemeType.ROOT);
         String contents = FileUtils.getContents(f);
         String[] ludemes = firstSplit(contents);
         Tree[] t = null;
@@ -35,7 +35,7 @@ public class Parser {
     /**
      * This method takes a string contents, which is expected to be a compilable ludii expression.
      * It then splits it into it´s sub-parts and creates a tree, how depends on the type of the ludeme.
-     * If it is a ..., the root is a node
+     * If it is a ..., the root is a node ...
      * Ludeme -> with the ludeme keyword as root and all its parameters as children (not terminal),
      * Collection -> "collection" with all elements of the collection as children (not terminal),
      * Keyword, Number, Parameter, String -> a node containing the affore mentioned without children (terminal)
@@ -48,9 +48,9 @@ public class Parser {
     public static Tree buildTree(String contents) {
         Tree t = null;
         if(contents == "")
-            return null;
-        LudemeType type = classify(contents.charAt(0));
-        if(type == LudemeType.LUDEME) {
+            throw new NullPointerException("The contents String was null");
+        PreLudemeType type = preclassify(contents.charAt(0));
+        if(type == PreLudemeType.LUDEME) {
             //removes () around ludeme
             contents = contents.substring(1,contents.length());
 
@@ -64,9 +64,10 @@ public class Parser {
             for(int i = 1; i < sub.length; i++) {
                 children.add(buildTree(sub[i]));
             }
+            // TODO: Make this work with LudemeType instead of pre
             t = new Tree(children, sub[0], false, type);
 
-        } else if(type == LudemeType.COLLECTION) {
+        } else if(type == PreLudemeType.COLLECTION) {
             //removes {} around collection
             contents = contents.substring(1,contents.length() - 1);
 
@@ -78,8 +79,9 @@ public class Parser {
             }
             t = new Tree(children, "collection", false, type);
         }
-        else if(type == LudemeType.KEYWORD || type == LudemeType.NUMBER
-                || type == LudemeType.PARAMETER || type == LudemeType.STRING) {
+        else if(type == PreLudemeType.UPPERCASE || type == PreLudemeType.NUMBER
+                || type == PreLudemeType.DEFINE_PARAMETER || type == PreLudemeType.STRING
+                || type == PreLudemeType.LOWERCASE) {
             //no subdivision necessary
             t = new Tree(null, contents, true, type);
         }
@@ -167,14 +169,14 @@ public class Parser {
         int nestingLevel = -1, startNestingLevel = 0;
         boolean foundFirst = true;
         boolean foundSecond = false;
-        LudemeType foundType = LudemeType.KEYWORD;
+        PreLudemeType foundType = PreLudemeType.LUDEME;
         while(i < contents.length()) {
             char cur = contents.charAt(i);
             //need to find fist space
             if(!foundFirst) {
                 //from first character we can classify it into a type
-                foundType = classify(cur);
-                if(foundType == LudemeType.ROOT) {
+                foundType = preclassify(cur);
+                if(foundType == PreLudemeType.ROOT) {
                     foundFirst = false;
                 } else {
                     if (cur == '(' || cur == '{') {
@@ -226,8 +228,9 @@ public class Parser {
                             end= i + 1;
                         }
                         break;
-                    case PARAMETER:
-                    case KEYWORD:
+                    case DEFINE_PARAMETER:
+                    case UPPERCASE:
+                    case LOWERCASE:
                     case NUMBER:
                         //need to find space
                         if(cur == ' ') {
@@ -280,77 +283,54 @@ public class Parser {
      * @param c first character of an expression
      * @return The type of the ludeme
      */
-    public static LudemeType classify(char c) {
-        // TODO: improve efficiency by using if with ranges
-        switch (c) {
-            case '(': return LudemeType.LUDEME;
-            case '{': return LudemeType.COLLECTION;
-            case '"': return LudemeType.STRING;
-            case '#': return LudemeType.PARAMETER;
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '5':
-            case '6':
-            case '9':
-            case '8':
-            case '7':
-            case '4':
-                return LudemeType.NUMBER;
-            case 'a':
-            case 'b':
-            case 'd':
-            case 'e':
-            case 'g':
-            case 'j':
-            case 'k':
-            case 'm':
-            case 'n':
-            case 'p':
-            case 'r':
-            case 's':
-            case 'c':
-            case 'f':
-            case 'h':
-            case 'i':
-            case 'l':
-            case 'o':
-            case 'q':
-            case 't':
-            case 'u':
-            case 'w':
-            case 'x':
-            case 'y':
-            case 'z':
-            case 'A':
-            case 'B':
-            case 'C':
-            case 'D':
-            case 'E':
-            case 'F':
-            case 'G':
-            case 'H':
-            case 'I':
-            case 'J':
-            case 'K':
-            case 'L':
-            case 'M':
-            case 'N':
-            case 'O':
-            case 'P':
-            case 'Q':
-            case 'R':
-            case 'S':
-            case 'T':
-            case 'U':
-            case 'V':
-            case 'W':
-            case 'X':
-            case 'Y':
-            case 'Z':
-                return LudemeType.KEYWORD;
-            default: return  LudemeType.ROOT;
+    public static PreLudemeType preclassify(char c) {
+        // ludeme : '(' = 40
+        // lowercase range:  a - z = 97 - 122
+        int i = (int) c;
+        if(i == 40) { // Ludeme: '('
+            return PreLudemeType.LUDEME;
+        } else if(i == 223) { // Collection: '{'
+            return PreLudemeType.COLLECTION;
+        } else if(i == 34){ // String: ' " '
+            return PreLudemeType.STRING;
+        } else if(i == 35){ // Define parameter: ' # '
+            return PreLudemeType.DEFINE_PARAMETER;
+        } else if(97 <= i && i <= 122){ // any lowercase letter
+            return PreLudemeType.LOWERCASE;
+        } else if(65 <= i && i <= 90){ // any uppercase letter
+            return PreLudemeType.UPPERCASE;
+        } else if(48 <= i && i <= 57){ // any numeral
+            return PreLudemeType.NUMBER;
+        }else if(i == 60){ // option: '<'
+            return PreLudemeType.OPTION;
+        }else { //DEFAULT
+            return PreLudemeType.ROOT;
+        }
+    }
+
+    public static LudemeType reclassify(String s, PreLudemeType preType) {
+        // TODO: Implement
+        // ludeme : '(' = 40
+        // lowercase range:  a - z = 97 - 122
+        switch (preType) {
+            case LUDEME:
+                return LudemeType.ROOT;
+            case COLLECTION:
+                return LudemeType.ROOT;
+            case STRING:
+                return LudemeType.ROOT;
+            case DEFINE_PARAMETER:
+                return LudemeType.ROOT;
+            case LOWERCASE:
+                return LudemeType.ROOT;
+            case UPPERCASE:
+                return LudemeType.ROOT;
+            case NUMBER:
+                return LudemeType.ROOT;
+            case OPTION:
+                return LudemeType.ROOT;
+            default:
+                return LudemeType.ROOT;
         }
     }
 }
