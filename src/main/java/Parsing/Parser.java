@@ -22,11 +22,9 @@ public class Parser {
         Tree root = new Tree(null, "root", false, /*TODO: Change back to LudemeType when ready*/PreLudemeType.ROOT);
         String contents = FileUtils.getContents(f);
         String[] ludemes = firstSplit(contents);
-        Tree[] t = null;
         // run through the whole string, need to make tree
-        for(int i = 0; i < ludemes.length; i++) {
+        for (String cur : ludemes) {
             //each ludeme becomes a tree, that is a child to the current tree
-            String cur = ludemes[i];
             root.addChild(buildTree(cur));
         }
         return root;
@@ -47,12 +45,12 @@ public class Parser {
      */
     public static Tree buildTree(String contents) {
         Tree t = null;
-        if(contents == "")
+        if(contents.equals(""))
             throw new NullPointerException("The contents String was null");
         PreLudemeType type = preclassify(contents.charAt(0));
         if(type == PreLudemeType.LUDEME) {
             //removes () around ludeme
-            contents = contents.substring(1,contents.length());
+            contents = contents.substring(1);
 
             String[] sub = splitIntoSubLudemes(contents);
             System.out.println("-----------------------------------------");
@@ -60,7 +58,7 @@ public class Parser {
             System.out.println(" ");
             PrintUtils.printCollection(Arrays.asList(sub));
             System.out.println("---");
-            List<Tree> children = new ArrayList<Tree>();
+            List<Tree> children = new ArrayList<>();
             for(int i = 1; i < sub.length; i++) {
                 children.add(buildTree(sub[i]));
             }
@@ -73,9 +71,9 @@ public class Parser {
 
             String[] sub = splitIntoSubLudemes(contents);
 
-            List<Tree> children = new ArrayList<Tree>();
-            for(int i = 0; i < sub.length; i++) {
-                children.add(buildTree(sub[i]));
+            List<Tree> children = new ArrayList<>();
+            for (String s : sub) {
+                children.add(buildTree(s));
             }
             t = new Tree(children, "collection", false, type);
         }
@@ -107,8 +105,7 @@ public class Parser {
         int startNestingLevel = 0;
         List<String> ludemes = new ArrayList<>();
         int start = -1;
-        int end = -1;
-        boolean searching = false;
+        int end;
         for(int i = 0; i < contents.length(); i++) {
             char cur = contents.charAt(i);
             //we have opened a ludeme
@@ -124,7 +121,6 @@ public class Parser {
                         String ludeme = contents.substring(start, end);
                         ludemes.add(ludeme);
                         start = -1;
-                        end = -1;
                     }
                 }
 
@@ -159,7 +155,7 @@ public class Parser {
      * @return
      */
     public static String[] splitIntoSubLudemes(String contents) {
-        boolean debug = false;
+        boolean debug = true;
 
         //step 1: search for first ')'
         List<String> ludemes = new ArrayList<>();
@@ -169,7 +165,7 @@ public class Parser {
         int nestingLevel = -1, startNestingLevel = 0;
         boolean foundFirst = true;
         boolean foundSecond = false;
-        PreLudemeType foundType = PreLudemeType.LUDEME;
+        PreLudemeType foundType = PreLudemeType.LOWERCASE; // because the brackets are removed around the ludeme: (game ...) -> game ..., so needs to be keyword, so we look for " "
         while(i < contents.length()) {
             char cur = contents.charAt(i);
             //need to find fist space
