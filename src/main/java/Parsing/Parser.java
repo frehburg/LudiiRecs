@@ -1,8 +1,9 @@
-package Parsing;
+package main.java.Parsing;
 
-import Tree.Tree;
-import Utils.FileUtils;
-import Utils.PrintUtils;
+
+import main.java.Tree.Tree;
+import main.java.Utils.FileUtils;
+import main.java.Utils.PrintUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,10 +23,12 @@ public class Parser {
         Tree root = new Tree(null, "root", false, /*TODO: Change back to LudemeType when ready*/PreLudemeType.ROOT);
         String contents = FileUtils.getContents(f);
         String[] ludemes = firstSplit(contents);
+        System.out.println(Arrays.toString(ludemes));
         // run through the whole string, need to make tree
         for (String cur : ludemes) {
             //each ludeme becomes a tree, that is a child to the current tree
-            root.addChild(buildTree(cur));
+            if(cur != "" && cur != null)
+                root.addChild(buildTree(cur));
         }
         return root;
     }
@@ -47,8 +50,8 @@ public class Parser {
         Tree t = null;
         if(contents.equals(""))
             throw new NullPointerException("The contents String was null");
-        PreLudemeType type = preclassify(contents.charAt(0));
-        if(type == PreLudemeType.LUDEME) {
+        PreLudemeType type = preclassify(contents.charAt(0), true);
+        if(type == PreLudemeType.LUDEME || type == PreLudemeType.OPTION) {
             //removes () around ludeme
             contents = contents.substring(1);
 
@@ -60,7 +63,8 @@ public class Parser {
             System.out.println("---");
             List<Tree> children = new ArrayList<>();
             for(int i = 1; i < sub.length; i++) {
-                children.add(buildTree(sub[i]));
+                if(sub[i] != null && sub[i] != "")
+                    children.add(buildTree(sub[i]));
             }
             // TODO: Make this work with LudemeType instead of pre
             t = new Tree(children, sub[0], false, type);
@@ -73,7 +77,8 @@ public class Parser {
 
             List<Tree> children = new ArrayList<>();
             for (String s : sub) {
-                children.add(buildTree(s));
+                if(s != "" && s != null)
+                    children.add(buildTree(s));
             }
             t = new Tree(children, "collection", false, type);
         }
@@ -165,13 +170,13 @@ public class Parser {
         int nestingLevel = -1, startNestingLevel = 0;
         boolean foundFirst = true;
         boolean foundSecond = false;
-        PreLudemeType foundType = PreLudemeType.LOWERCASE; // because the brackets are removed around the ludeme: (game ...) -> game ..., so needs to be keyword, so we look for " "
+        PreLudemeType foundType = preclassify(contents.charAt(0), false); // because the brackets are removed around the ludeme: (game ...) -> game ..., so needs to be keyword, so we look for " "
         while(i < contents.length()) {
             char cur = contents.charAt(i);
             //need to find fist space
             if(!foundFirst) {
                 //from first character we can classify it into a type
-                foundType = preclassify(cur);
+                foundType = preclassify(cur, true);
                 if(foundType == PreLudemeType.ROOT) {
                     foundFirst = false;
                 } else {
@@ -226,7 +231,6 @@ public class Parser {
                         break;
                     case DEFINE_PARAMETER:
                     case UPPERCASE:
-                    case LOWERCASE:
                     case NUMBER:
                         //need to find space
                         if(cur == ' ') {
@@ -236,6 +240,31 @@ public class Parser {
                         }
                         break;
 
+                    case LOWERCASE:
+                        //need to find colon for optional argument name
+                        if(cur == ':') {
+                            //found a complete optional name
+                            //because we also want to parse the value
+                            if(contents.charAt(i + 1) == ' ') {
+                                foundType = preclassify(contents.charAt(i + 2), false);
+                            } else {
+                                foundType = preclassify(contents.charAt(i + 1), false);
+                            }
+                        }
+                        //need to find space
+                        else if(cur == ' ') {
+                            //found a complete string
+                            foundSecond = true;
+                            end =  i;
+                        }
+                        break;
+                    case OPTION:
+                        //need to find '>'
+                        if(cur == '>') {
+                            //found a complete options tag
+                            foundSecond = true;
+                            end= i + 1;
+                        }
                 }
                 if(foundSecond) {
                     ludemes.add(contents.substring(start,end));
@@ -277,27 +306,37 @@ public class Parser {
      * - Number
      * according to its first character.
      * @param c first character of an expression
+     * @param b
      * @return The type of the ludeme
      */
-    public static PreLudemeType preclassify(char c) {
+    public static PreLudemeType preclassify(char c, boolean b) {
         // ludeme : '(' = 40
         // lowercase range:  a - z = 97 - 122
         int i = (int) c;
+        if(b)System.out.println("CLASSIFICATION "+ c + " "+i);
         if(i == 40) { // Ludeme: '('
+            if(b)System.out.println("lud");
             return PreLudemeType.LUDEME;
-        } else if(i == 223) { // Collection: '{'
+        } else if(i == 123) { // Collection: '{'
+            if(b)System.out.println("coll");
             return PreLudemeType.COLLECTION;
         } else if(i == 34){ // String: ' " '
+            if(b)System.out.println("str");
             return PreLudemeType.STRING;
         } else if(i == 35){ // Define parameter: ' # '
+            if(b)System.out.println("def #");
             return PreLudemeType.DEFINE_PARAMETER;
         } else if(97 <= i && i <= 122){ // any lowercase letter
+            if(b)System.out.println("low");
             return PreLudemeType.LOWERCASE;
-        } else if(65 <= i && i <= 90){ // any uppercase letter
+        } else if(i >= 65 && i <= 90){ // any uppercase letter
+            if(b)System.out.println("upp");
             return PreLudemeType.UPPERCASE;
-        } else if(48 <= i && i <= 57){ // any numeral
+        } else if(i >= 48 && i <= 57){ // any numeral
+            if(b)System.out.println("num");
             return PreLudemeType.NUMBER;
         }else if(i == 60){ // option: '<'
+            if(b)System.out.println("opt");
             return PreLudemeType.OPTION;
         }else { //DEFAULT
             return PreLudemeType.ROOT;

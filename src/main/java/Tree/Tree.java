@@ -1,7 +1,6 @@
-package Tree;
+package main.java.Tree;
 
-import Parsing.LudemeType;
-import Parsing.PreLudemeType;
+import main.java.Parsing.PreLudemeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,8 @@ public class Tree {
         boolean alreadyChild = false;
         one:for(int i = 0; i < children.size(); i++) {
             Tree c = children.get(i);
+            if(c == null)
+                break;
             if(c.getKw().equals(child.getKw())) {
                 children.get(i).incrementUsed(); //if the child already exists then its used is incremented by 1
                 alreadyChild = true;
@@ -51,6 +52,8 @@ public class Tree {
     }
 
     public void addChild(Tree buildTree) {
+        System.out.println(buildTree.toString());
+        System.out.println(buildTree.children);
         addChild(buildTree.getChildren(), buildTree.getKw(), buildTree.isTerminal(), buildTree.getType());
     }
 

@@ -1,8 +1,7 @@
-package Tree;
+package main.java.Tree;
 
-import Parsing.Parser;
-import Utils.FileUtils;
-import Utils.PrintUtils;
+import main.java.Parsing.Parser;
+import main.java.Utils.FileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,10 +9,11 @@ import java.util.*;
 
 public class TreeGenerator {
     public static final String TIC_TAC_TOE_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\Tic-Tac-Toe.lud";
-    public static final String SUDOKU_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\Ludii\\lud\\puzzle\\deduction\\Sudoku.lud";
+    public static final String SUDOKU_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\Ludii\\lud\\puzzle\\deduction\\SudokuM.lud";
+    public static final String MOD_SUDOKU_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\SudokuM.lud";
     public static void main(String[] args) {
         try {
-            File f = new File(TIC_TAC_TOE_PATH);
+            File f = new File(MOD_SUDOKU_PATH);
             Tree t = Parser.parse(f);
             System.out.println("");
             System.out.println("------------------------------------------------------------------------------------");

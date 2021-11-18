@@ -1,4 +1,4 @@
-package Parsing;
+package main.java.Parsing;
 
 public enum LudemeType {
     ROOT(-1, "rootro", null, null,null),

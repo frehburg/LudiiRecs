@@ -1,4 +1,4 @@
-package Utils;
+package main.java.Utils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,6 +15,7 @@ public class PrintUtils {
 
     /**
      * This method inserts a space left of '(' and right of ')' if it doesn´t exist yet
+     * also '{' '}' and delete spaces after '{' and before '}'
      * @param s
      * @param start
      * @return
@@ -25,16 +26,15 @@ public class PrintUtils {
                 char prev = s.charAt(i - 2);
                 char cur = s.charAt(i - 1);
                 char next = s.charAt(i);
-
                 if(cur == '(' || cur == '{') {
                     if(prev != ' '){
-                        s = s.substring(0, (i-1)) + " " + s.substring(i - 1, s.length());
+                        s = s.substring(0, (i-1)) + " " + s.substring(i - 1);
                         return insertSpaceAroundBrackets(s,i + 1);
                     }
                 }
                 if(cur == ')' || cur == '}') {
                    if(next != ' ') {
-                        s = s.substring(0, (i)) + " " + s.substring(i, s.length());
+                        s = s.substring(0, (i)) + " " + s.substring(i);
                         return insertSpaceAroundBrackets(s,i + 2);
                     }
                 }
