@@ -20,7 +20,7 @@ public class RecNode implements iRecNode {
     private ArrayList<iRecNode> children;
     private String keyword;
     private NodeType nodeType;
-    private int id;
+    private final int id;
 
     //iRecNode
     private int occurrenceFrequency;

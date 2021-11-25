@@ -23,7 +23,7 @@ public class Node implements iNode {
     private ArrayList<iNode> children;
     private String keyword;
     private NodeType nodeType;
-    private int id;
+    private final int id;
     private String implementation;
     private ArrayList<String> constructors;
 
