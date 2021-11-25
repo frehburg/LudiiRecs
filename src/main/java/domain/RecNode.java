@@ -1,7 +1,6 @@
 package main.java.domain;
 
-import main.java.old.Parsing.LudemeType;
-import main.java.old.Parsing.PreLudemeType;
+import main.java.parser.LudemeType;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iRecNode;
 
@@ -20,11 +19,10 @@ public class RecNode implements iRecNode {
     private ArrayList<iRecNode> children;
     private String keyword;
     private NodeType nodeType;
-    private int id;
+    private final int ID;
 
     //iRecNode
     private int occurrenceFrequency;
-    private PreLudemeType pre;
     private  LudemeType type;
 
     private String implementation;
@@ -36,13 +34,12 @@ public class RecNode implements iRecNode {
         this.children = new ArrayList<iRecNode>();
         this.keyword = keyword;
         this.nodeType = NodeType.ROOT;
-        this.id = counter++;
+        this.ID = counter++;
         //iRecNode
         occurrenceFrequency = 1;
         // TODO: Work on null check
         if(isNull(parent, children, keyword))
             throw new NullPointerException("The node you are trying to create is null");
-        pre = PreLudemeType.ERR;
         type = LudemeType.ERR;
 
         this.implementation = "";
@@ -70,7 +67,7 @@ public class RecNode implements iRecNode {
         if(parent.equals(SUPER_NODE)) {
             this.nodeType = NodeType.ROOT;
         }
-        this.id = counter++;
+        this.ID = counter++;
         //iRecNode
         occurrenceFrequency = 1;
 
@@ -90,10 +87,9 @@ public class RecNode implements iRecNode {
         this.children = children;
         this.keyword = keyword;
         this.nodeType = NodeType.SUPER;
-        this.id = counter++;
+        this.ID = counter++;
         //iRecNode
         this.occurrenceFrequency = -1;
-        pre = PreLudemeType.ERR;
         type = LudemeType.ERR;
 
         this.implementation = "";
@@ -106,6 +102,7 @@ public class RecNode implements iRecNode {
      * Adds a child to the children list
      *
      * @param keyword
+     * @return
      */
     @Override
     public iNode addChild(String keyword) throws NullPointerException {
@@ -113,7 +110,7 @@ public class RecNode implements iRecNode {
         this.children.add(tmp);
         if(this.nodeType != NodeType.ROOT)
             this.nodeType = NodeType.INNER;
-        return tmp.clone();
+        return tmp;
     }
 
     /**
@@ -202,7 +199,7 @@ public class RecNode implements iRecNode {
      */
     @Override
     public String getId() {
-        return "RN"+id;
+        return "RN"+ ID;
     }
 
     /**
@@ -322,15 +319,6 @@ public class RecNode implements iRecNode {
      *
      * @return
      */
-    @Override
-    public PreLudemeType getPreLudemeType() {
-        return pre;
-    }
-
-    @Override
-    public void setPreLudemeType(PreLudemeType pre) {
-        this.pre = pre;
-    }
 
     /**
      * Returns the updated classification of the ludeme
