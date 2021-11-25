@@ -36,4 +36,11 @@ public interface iRecNode extends iNode{
     LudemeType getLudemeType();
 
     void setLudemeType(LudemeType type);
+
+    @Override
+    /**
+     * Adds a child to the children list
+     * @param keyword
+     */
+    iRecNode addChild(String keyword) throws NullPointerException;
 }

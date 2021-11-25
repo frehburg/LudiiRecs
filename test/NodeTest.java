@@ -15,7 +15,7 @@ public class NodeTest {
 
         //test if everything works when adding a child to a single node
         singleNode.addChild("leaf");
-        ArrayList<iNode> singleNodeChildren = singleNode.getChildren();
+        ArrayList<iNode> singleNodeChildren = (ArrayList<iNode>)singleNode.getChildren();
         //test nodetypes
         Assert.assertEquals(NodeType.ROOT, singleNode.getNodeType());
         Assert.assertEquals(NodeType.LEAF, singleNodeChildren.get(0).getNodeType());
@@ -27,10 +27,10 @@ public class NodeTest {
         Assert.assertEquals("leaf", singleNodeChildren.get(0).getKeyword());
 
         //test if everything works when adding a child to an inner node
-        ArrayList<iNode> childrenNodeChildren = childrenNode.getChildren();
+        ArrayList<iNode> childrenNodeChildren = (ArrayList<iNode>)childrenNode.getChildren();
         iNode inner = childrenNodeChildren.get(0);
         inner.addChild("leaf2");
-        ArrayList<iNode> innerNodeChildren = inner.getChildren();
+        ArrayList<iNode> innerNodeChildren = (ArrayList<iNode>)inner.getChildren();
         //test nodetypes
         Assert.assertEquals(NodeType.ROOT, childrenNode.getNodeType());
         Assert.assertEquals(NodeType.INNER, inner.getNodeType());
@@ -59,7 +59,7 @@ public class NodeTest {
     @Test
     public void testGetParent() {
         setup();
-        ArrayList<iNode> children = childrenNode.getChildren();
+        ArrayList<iNode> children = (ArrayList<iNode>)childrenNode.getChildren();
         Assert.assertEquals(true, children.get(0).getParent().equals(childrenNode));
 
         Assert.assertEquals(true, singleNode.getParent().equals(Node.SUPER_NODE));
@@ -120,7 +120,7 @@ public class NodeTest {
         // create a node with 1 child that has another child
         childrenNode = new Node("root");
         childrenNode.addChild("inner");
-        ArrayList<iNode> children = childrenNode.getChildren();
+        ArrayList<iNode> children = (ArrayList<iNode>)childrenNode.getChildren();
         children.get(0).addChild("leaf");
     }
 
