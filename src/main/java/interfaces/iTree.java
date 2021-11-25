@@ -1,6 +1,5 @@
 package main.java.interfaces;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface iTree<T> {
@@ -15,4 +14,10 @@ public interface iTree<T> {
      * @return
      */
     List<T> traversal();
+
+    /**
+     * Returns nodes in lists of layers
+     * @return
+     */
+    List<List<iNode>> layerTraversal();
 }

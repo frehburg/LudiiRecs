@@ -1,5 +1,6 @@
 package main.java.VisualEditor.EditorView;
 
+import main.java.VisualEditor.EditorView.PrimitiveNode.CircleNodeComponent;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iTree;
 
@@ -8,18 +9,25 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.GeneralPath;
+import java.util.ArrayList;
+import java.util.List;
 
+// TODO: add scroll panels
 public class EditorPanel extends JPanel implements MouseListener, MouseMotionListener
 {
 
     private final iTree<iNode> NodeTree;
+    private List<List<CircleNodeComponent>> nodeLayerList;
+    private static final int XSPACING = 70, YSPACING = 150;
 
     public EditorPanel(iTree<iNode> NodeTree)
     {
+        nodeLayerList = new ArrayList<>();
         this.NodeTree = NodeTree;
         addMouseListener(this);
         addMouseMotionListener(this);
+        setVisible(true);
+
         addVisualNodes();
     }
 
@@ -28,6 +36,21 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
      */
     private void addVisualNodes()
     {
+        List<List<iNode>> nodes = NodeTree.layerTraversal();
+        List<CircleNodeComponent> layer;
+
+        for (List<iNode> l : nodes)
+        {
+            layer = new ArrayList<>();
+            for (iNode n : l)
+            {
+                // add node component to the list of components to be drawn
+                // FIXME: think of better implementation for the node id
+                CircleNodeComponent nodeComponent = new CircleNodeComponent(n.getKeyword(), n.getId().hashCode());
+                layer.add(nodeComponent);
+            }
+            nodeLayerList.add(layer);
+        }
 
     }
 
@@ -36,41 +59,26 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
     @Override
     public void paint(final Graphics g)
     {
-        final Graphics2D g2d = (Graphics2D)g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        super.paintComponent(g);
+        for (int yCoordinate = 0; yCoordinate < nodeLayerList.size(); yCoordinate++) {
+            for (int xCoordinate = 0; xCoordinate < nodeLayerList.get(yCoordinate).size(); xCoordinate++) {
+                CircleNodeComponent node = nodeLayerList.get(yCoordinate).get(xCoordinate);
+                node.drawComponents(g, xCoordinate*XSPACING, yCoordinate*YSPACING);
+            }
+        }
+        //final Graphics2D g2d = (Graphics2D)g;
+        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
         // Clear the view
-        g2d.setPaint(Color.white);
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-
-        drawTest(g2d);
+        //g2d.setPaint(Color.white);
+        //g2d.fillRect(0, 0, getWidth(), getHeight());
+        revalidate();
+        repaint();
     }
 
     //-------------------------------------------------------------------------
 
-    void drawTest(final Graphics2D g2d)
-    {
-        g2d.setColor(new Color(255, 0, 0));
-
-        final Point[] pts =
-                {
-                        new Point(100, 100),
-                        new Point(300, 100),
-                        new Point(300, 600),
-                        new Point(500, 600),
-                };
-
-        for (int n = 0; n < pts.length - 1; n++)
-            g2d.drawLine(pts[n].x, pts[n].y, pts[n+1].x, pts[n+1].y);
-
-        g2d.setColor(new Color(0, 127, 255));
-
-        final GeneralPath path = new GeneralPath();
-        path.moveTo(pts[0].x, pts[0].y);
-        path.curveTo(pts[1].x, pts[1].y, pts[2].x, pts[2].y, pts[3].x, pts[3].y);
-        g2d.draw(path);
-    }
 
     //-------------------------------------------------------------------------
 

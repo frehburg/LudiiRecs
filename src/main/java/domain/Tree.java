@@ -3,8 +3,7 @@ package main.java.domain;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iTree;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Tree implements iTree {
 
@@ -64,6 +63,25 @@ public class Tree implements iTree {
             traversal.addAll(preOrderTraversal(c));
         }
         traversal.add(r);
+        return traversal;
+    }
+
+    @Override
+    public List<List<iNode>> layerTraversal() {
+        ArrayList<List<iNode>> traversal = new ArrayList<>();
+        ArrayList<iNode> layer = new ArrayList<>();
+        ArrayList<iNode> newLayer;
+
+        layer.add(this.root);
+        while (!layer.isEmpty()) {
+            traversal.add(layer);
+            newLayer = new ArrayList<>();
+            for (iNode p : layer) {
+                newLayer.addAll(p.getChildren());
+            }
+            layer = newLayer;
+        }
+        traversal.remove(0);
         return traversal;
     }
 }

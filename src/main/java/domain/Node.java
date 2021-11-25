@@ -92,7 +92,7 @@ public class Node implements iNode {
         this.children.add(tmp);
         if(this.nodeType != NodeType.ROOT)
             this.nodeType = NodeType.INNER;
-        return this.clone();
+        return tmp;
     }
 
     /**
