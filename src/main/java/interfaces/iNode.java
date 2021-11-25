@@ -10,7 +10,7 @@ public interface iNode {
      * Adds a child to the children list
      * @param keyword
      */
-    void addChild(String keyword) throws NullPointerException;
+    iNode addChild(String keyword) throws NullPointerException;
 
     /**
      * Returns the ludeme that this node represents

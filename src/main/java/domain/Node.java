@@ -4,8 +4,6 @@ package main.java.domain;
 import main.java.interfaces.iNode;
 
 import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.ArrayList;
 
 /**
  * To create a structure:
@@ -89,11 +87,12 @@ public class Node implements iNode {
      * @param keyword
      */
     @Override
-    public void addChild(String keyword) throws NullPointerException {
+    public iNode addChild(String keyword) throws NullPointerException {
         iNode tmp = new Node(this, new ArrayList<iNode>(), keyword);
         this.children.add(tmp);
         if(this.nodeType != NodeType.ROOT)
             this.nodeType = NodeType.INNER;
+        return this.clone();
     }
 
     /**
