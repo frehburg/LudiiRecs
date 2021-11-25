@@ -1,4 +1,4 @@
-package main.java.Parsing;
+package main.java.old.Parsing;
 
 public enum LudemeType {
     ERR(-1, "rootro", null, null,null),

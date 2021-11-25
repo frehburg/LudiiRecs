@@ -1,7 +1,7 @@
-package main.java.Parsing;
+package main.java.old.Parsing;
 
 
-import main.java.Tree.Tree;
+import main.java.old.Parsing.Tree.Tree;
 import main.java.Utils.FileUtils;
 import main.java.Utils.PrintUtils;
 

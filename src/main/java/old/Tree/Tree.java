@@ -1,6 +1,6 @@
-package main.java.Tree;
+package main.java.old.Tree;
 
-import main.java.Parsing.PreLudemeType;
+import main.java.old.Parsing.PreLudemeType;
 
 import java.util.ArrayList;
 import java.util.List;

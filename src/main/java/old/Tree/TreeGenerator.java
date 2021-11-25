@@ -1,6 +1,6 @@
-package main.java.Tree;
+package main.java.old.Tree;
 
-import main.java.Parsing.Parser;
+import main.java.old.Parsing.Parser;
 import main.java.Utils.FileUtils;
 
 import java.io.File;

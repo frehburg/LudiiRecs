@@ -1,7 +1,7 @@
 package main.java.domain;
 
-import main.java.Parsing.LudemeType;
-import main.java.Parsing.PreLudemeType;
+import main.java.old.Parsing.LudemeType;
+import main.java.old.Parsing.PreLudemeType;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iRecNode;
 
