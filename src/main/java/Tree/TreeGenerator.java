@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class TreeGenerator {
+    //FIXME: change from absolute path to repository path
     public static final String TIC_TAC_TOE_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\Tic-Tac-Toe.lud";
     public static final String SUDOKU_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\Ludii\\lud\\puzzle\\deduction\\SudokuM.lud";
     public static final String MOD_SUDOKU_PATH = "C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\res\\SudokuM.lud";
