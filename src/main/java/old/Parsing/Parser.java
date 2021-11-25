@@ -1,9 +1,8 @@
 package main.java.old.Parsing;
 
-
-import main.java.old.Parsing.Tree.Tree;
 import main.java.Utils.FileUtils;
 import main.java.Utils.PrintUtils;
+import main.java.old.Tree.Tree;
 
 import java.io.File;
 import java.io.FileNotFoundException;
