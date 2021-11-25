@@ -20,7 +20,7 @@ public class RecNode implements iRecNode {
     private ArrayList<iRecNode> children;
     private String keyword;
     private NodeType nodeType;
-    private final int id;
+    private final int ID;
 
     //iRecNode
     private int occurrenceFrequency;
@@ -36,7 +36,7 @@ public class RecNode implements iRecNode {
         this.children = new ArrayList<iRecNode>();
         this.keyword = keyword;
         this.nodeType = NodeType.ROOT;
-        this.id = counter++;
+        this.ID = counter++;
         //iRecNode
         occurrenceFrequency = 1;
         // TODO: Work on null check
@@ -70,7 +70,7 @@ public class RecNode implements iRecNode {
         if(parent.equals(SUPER_NODE)) {
             this.nodeType = NodeType.ROOT;
         }
-        this.id = counter++;
+        this.ID = counter++;
         //iRecNode
         occurrenceFrequency = 1;
 
@@ -90,7 +90,7 @@ public class RecNode implements iRecNode {
         this.children = children;
         this.keyword = keyword;
         this.nodeType = NodeType.SUPER;
-        this.id = counter++;
+        this.ID = counter++;
         //iRecNode
         this.occurrenceFrequency = -1;
         pre = PreLudemeType.ERR;
@@ -201,7 +201,7 @@ public class RecNode implements iRecNode {
      */
     @Override
     public String getId() {
-        return "RN"+id;
+        return "RN"+ ID;
     }
 
     /**
