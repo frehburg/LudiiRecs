@@ -27,6 +27,9 @@ public class RecNode implements iRecNode {
     private PreLudemeType pre;
     private  LudemeType type;
 
+    private String implementation;
+    private List<String> constructors;
+
     public RecNode(String keyword) {
         //iNode
         this.parent = SUPER_NODE;
@@ -42,6 +45,8 @@ public class RecNode implements iRecNode {
         pre = PreLudemeType.ERR;
         type = LudemeType.ERR;
 
+        this.implementation = "";
+        this.constructors = new ArrayList<>();
     }
     /**
      * Constructor for addChild() method
@@ -49,7 +54,7 @@ public class RecNode implements iRecNode {
      * @param children
      * @param keyword
      */
-    private RecNode(iRecNode parent, ArrayList<iRecNode> children, String keyword, ) {
+    private RecNode(iRecNode parent, ArrayList<iRecNode> children, String keyword) {
         //iNode
         this.parent = parent;
         this.children = children;
@@ -69,6 +74,8 @@ public class RecNode implements iRecNode {
         //iRecNode
         occurrenceFrequency = 1;
 
+        this.implementation = "";
+        this.constructors = new ArrayList<>();
     }
     /**
      * Creates super node
@@ -88,6 +95,9 @@ public class RecNode implements iRecNode {
         this.occurrenceFrequency = -1;
         pre = PreLudemeType.ERR;
         type = LudemeType.ERR;
+
+        this.implementation = "";
+        this.constructors = new ArrayList<>();
     }
 
 
@@ -99,7 +109,7 @@ public class RecNode implements iRecNode {
      */
     @Override
     public void addChild(String keyword) throws NullPointerException {
-        iRecNode tmp = new RecNode(this, new ArrayList<iNode>(), keyword);
+        iRecNode tmp = new RecNode(this, new ArrayList<iRecNode>(), keyword);
         this.children.add(tmp);
         if(this.nodeType != NodeType.ROOT)
             this.nodeType = NodeType.INNER;
@@ -122,7 +132,7 @@ public class RecNode implements iRecNode {
      */
     @Override
     public String getImplementation() {
-        return null;
+        return implementation;
     }
 
     /**
@@ -132,7 +142,7 @@ public class RecNode implements iRecNode {
      */
     @Override
     public List<String> getConstructors() {
-        return null;
+        return this.constructors;
     }
 
     /**
@@ -166,7 +176,7 @@ public class RecNode implements iRecNode {
      */
     @Override
     public List<iNode> getSiblings() {
-        return null;
+        return this.getParent().getChildren();
     }
 
     @Override
@@ -202,7 +212,7 @@ public class RecNode implements iRecNode {
      */
     @Override
     public void setImplementation(String implementation) {
-
+        this.implementation = implementation;
     }
 
     /**
