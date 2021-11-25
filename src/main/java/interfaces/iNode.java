@@ -2,7 +2,7 @@ package main.java.interfaces;
 
 import main.java.domain.NodeType;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface iNode {
 
@@ -19,6 +19,18 @@ public interface iNode {
     String getKeyword();
 
     /**
+     * Returns the variant of  implementation in the syntax
+     * @return
+     */
+    String getImplementation();
+
+    /**
+     * Returns a list of all possible variants of implementation in the syntax
+     * @return
+     */
+    List<String> getConstructors();
+
+    /**
      * Returns the parent of the node if there exists one and throws a NullPointerException if there is none.
      * @return
      */
@@ -28,7 +40,13 @@ public interface iNode {
      * Returns the list of children
      * @return
      */
-    ArrayList<iNode> getChildren();
+    List<iNode> getChildren();
+
+    /**
+     * Returns the list of siblings (nodes with the same parent
+     * @return
+     */
+    List<iNode> getSiblings();
 
     int getChildrenSize();
 
@@ -43,6 +61,12 @@ public interface iNode {
      * @return
      */
     String getId();
+
+    /**
+     * Sets the variant of  implementation in the syntax to a new value implementation
+     * @return
+     */
+    void setImplementation(String implementation);
 
     /**
      * Returns true, if the keyword is null, or x * " " (so also "")

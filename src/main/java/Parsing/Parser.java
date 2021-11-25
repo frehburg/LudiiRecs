@@ -20,7 +20,7 @@ public class Parser {
      * @throws FileNotFoundException
      */
     public static Tree parse(File f) throws FileNotFoundException {
-        Tree root = new Tree(null, "root", false, /*TODO: Change back to LudemeType when ready*/PreLudemeType.ROOT);
+        Tree root = new Tree(null, "root", false, /*TODO: Change back to LudemeType when ready*/PreLudemeType.ERR);
         String contents = FileUtils.getContents(f);
         String[] ludemes = firstSplit(contents);
         System.out.println(Arrays.toString(ludemes));
@@ -177,7 +177,7 @@ public class Parser {
             if(!foundFirst) {
                 //from first character we can classify it into a type
                 foundType = preclassify(cur, true);
-                if(foundType == PreLudemeType.ROOT) {
+                if(foundType == PreLudemeType.ERR) {
                     foundFirst = false;
                 } else {
                     if (cur == '(' || cur == '{') {
@@ -339,7 +339,7 @@ public class Parser {
             if(b)System.out.println("opt");
             return PreLudemeType.OPTION;
         }else { //DEFAULT
-            return PreLudemeType.ROOT;
+            return PreLudemeType.ERR;
         }
     }
 
@@ -349,23 +349,23 @@ public class Parser {
         // lowercase range:  a - z = 97 - 122
         switch (preType) {
             case LUDEME:
-                return LudemeType.ROOT;
+                return LudemeType.ERR;
             case COLLECTION:
-                return LudemeType.ROOT;
+                return LudemeType.ERR;
             case STRING:
-                return LudemeType.ROOT;
+                return LudemeType.ERR;
             case DEFINE_PARAMETER:
-                return LudemeType.ROOT;
+                return LudemeType.ERR;
             case LOWERCASE:
-                return LudemeType.ROOT;
+                return LudemeType.ERR;
             case UPPERCASE:
-                return LudemeType.ROOT;
+                return LudemeType.ERR;
             case NUMBER:
-                return LudemeType.ROOT;
+                return LudemeType.ERR;
             case OPTION:
-                return LudemeType.ROOT;
+                return LudemeType.ERR;
             default:
-                return LudemeType.ROOT;
+                return LudemeType.ERR;
         }
     }
 }

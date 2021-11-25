@@ -6,45 +6,88 @@ import main.java.interfaces.iNode;
 import main.java.interfaces.iRecNode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecNode implements iRecNode {
     private static int counter = 0;
     /**
      * Given as a parent to every Node that has no parent
      */
-    public static final iRecNode SUPER_NODE = new RecNode(null, new ArrayList<iNode>(), "SUPER_NODE", NodeType.SUPER);
+    public static final iRecNode SUPER_NODE = new RecNode(null, new ArrayList<iRecNode>(), "SUPER_NODE", NodeType.SUPER);
 
+    //iNode
     private iRecNode parent;
     private ArrayList<iRecNode> children;
     private String keyword;
     private NodeType nodeType;
     private int id;
+
+    //iRecNode
     private int occurrenceFrequency;
     private PreLudemeType pre;
     private  LudemeType type;
 
     public RecNode(String keyword) {
+        //iNode
         this.parent = SUPER_NODE;
         this.children = new ArrayList<iRecNode>();
         this.keyword = keyword;
         this.nodeType = NodeType.ROOT;
         this.id = counter++;
-        occurrenceFrequency = 0;
+        //iRecNode
+        occurrenceFrequency = 1;
         // TODO: Work on null check
         if(isNull(parent, children, keyword))
             throw new NullPointerException("The node you are trying to create is null");
-        pre = PreLudemeType.ROOT;
-        type = LudemeType.ROOT;
+        pre = PreLudemeType.ERR;
+        type = LudemeType.ERR;
 
     }
     /**
-     * TODO: CHANGE
-     * @param o
-     * @param iNodes
-     * @param super_node
-     * @param aSuper
+     * Constructor for addChild() method
+     * @param parent
+     * @param children
+     * @param keyword
      */
-    public RecNode(Object o, ArrayList<iNode> iNodes, String super_node, NodeType aSuper) {
+    private RecNode(iRecNode parent, ArrayList<iRecNode> children, String keyword, ) {
+        //iNode
+        this.parent = parent;
+        this.children = children;
+        this.keyword = keyword;
+        if(isNull(parent, children, keyword)) { //null check
+            throw new NullPointerException("The node you have passed along is null");
+        }
+        if(children.isEmpty()) {
+            this.nodeType = NodeType.LEAF;
+        } else {
+            this.nodeType = NodeType.INNER;
+        }
+        if(parent.equals(SUPER_NODE)) {
+            this.nodeType = NodeType.ROOT;
+        }
+        this.id = counter++;
+        //iRecNode
+        occurrenceFrequency = 1;
+
+    }
+    /**
+     * Creates super node
+     * @param parent
+     * @param children
+     * @param keyword
+     * @param nodeType
+     */
+    private RecNode(iRecNode parent, ArrayList<iRecNode> children, String keyword, NodeType nodeType) {
+        //iNode
+        this.parent = parent;
+        this.children = children;
+        this.keyword = keyword;
+        this.nodeType = NodeType.SUPER;
+        this.id = counter++;
+        //iRecNode
+        this.occurrenceFrequency = -1;
+        pre = PreLudemeType.ERR;
+        type = LudemeType.ERR;
     }
 
 
@@ -73,6 +116,26 @@ public class RecNode implements iRecNode {
     }
 
     /**
+     * Returns the variant of  implementation in the syntax
+     *
+     * @return
+     */
+    @Override
+    public String getImplementation() {
+        return null;
+    }
+
+    /**
+     * Returns a list of all possible variants of implementation in the syntax
+     *
+     * @return
+     */
+    @Override
+    public List<String> getConstructors() {
+        return null;
+    }
+
+    /**
      * Returns the parent of the node if there exists one and throws a NullPointerException if there is none.
      *
      * @return
@@ -94,6 +157,16 @@ public class RecNode implements iRecNode {
             copy.add(n);
         }
         return copy;
+    }
+
+    /**
+     * Returns the list of siblings (nodes with the same parent
+     *
+     * @return
+     */
+    @Override
+    public List<iNode> getSiblings() {
+        return null;
     }
 
     @Override
@@ -119,6 +192,17 @@ public class RecNode implements iRecNode {
     @Override
     public String getId() {
         return "RN"+id;
+    }
+
+    /**
+     * Sets the variant of  implementation in the syntax to a new value implementation
+     *
+     * @param implementation
+     * @return
+     */
+    @Override
+    public void setImplementation(String implementation) {
+
     }
 
     /**

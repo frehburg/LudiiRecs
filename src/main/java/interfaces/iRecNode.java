@@ -3,7 +3,7 @@ package main.java.interfaces;
 import main.java.Parsing.LudemeType;
 import main.java.Parsing.PreLudemeType;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface iRecNode extends iNode{
     /**
@@ -21,13 +21,13 @@ public interface iRecNode extends iNode{
      * Returns the conditional probability of all of the children conditioned on the parents
      * @return
      */
-    ArrayList<Double> getWeights();
+    List<Double> getWeights();
 
     /**
-     * Returns an arraylist of type iRecNode of the children
+     * Returns an List of type iRecNode of the children
      * @return
      */
-    ArrayList<iRecNode> getRecChildren();
+    List<iRecNode> getRecChildren();
 
     /**
      * Returns the first classification of the ludeme

@@ -1,7 +1,7 @@
 package main.java.Parsing;
 
 public enum LudemeType {
-    ROOT(-1, "rootro", null, null,null),
+    ERR(-1, "rootro", null, null,null),
     LUDEME(0, "ludeme", new char[]{'('}, null, new char[]{')'}), // (
     COLLECTION(1, "collec", new char[]{'{'}, null, new char[]{'}'}), // {
     STRING(2, "string", new char[]{'"'}, null, new char[]{'"'}), // " or '

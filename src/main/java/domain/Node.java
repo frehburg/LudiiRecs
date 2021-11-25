@@ -4,6 +4,8 @@ package main.java.domain;
 import main.java.interfaces.iNode;
 
 import java.util.ArrayList;
+import java.util.ArrayList;
+import java.util.ArrayList;
 
 /**
  * To create a structure:
@@ -22,6 +24,8 @@ public class Node implements iNode {
     private String keyword;
     private NodeType nodeType;
     private int id;
+    private String implementation;
+    private ArrayList<String> constructors;
 
     public Node(String keyword) {
         this.parent = SUPER_NODE;
@@ -31,8 +35,16 @@ public class Node implements iNode {
         this.keyword = keyword;
         this.nodeType = NodeType.ROOT;
         this.id = counter++;
+        this.implementation = "";
+        this.constructors = new ArrayList<>();
     }
 
+    /**
+     * Constructor for addChild() method
+     * @param parent
+     * @param children
+     * @param keyword
+     */
     private Node(iNode parent, ArrayList<iNode> children, String keyword) {
         this.parent = parent;
         this.children = children;
@@ -49,7 +61,8 @@ public class Node implements iNode {
             this.nodeType = NodeType.ROOT;
         }
         this.id = counter++;
-
+        this.implementation = "";
+        this.constructors = new ArrayList<>();
     }
 
     /**
@@ -65,10 +78,12 @@ public class Node implements iNode {
         this.keyword = keyword;
         this.nodeType = NodeType.SUPER;
         this.id = counter++;
+        this.implementation = "";
+        this.constructors = new ArrayList<>();
     }
 
     /**
-     * Adds a child to the children list, by creating a new one
+     * Adds a child to the children ArrayList, by creating a new one
      * Null Check
      *
      * @param keyword
@@ -92,6 +107,26 @@ public class Node implements iNode {
     }
 
     /**
+     * Returns the variant of  implementation in the syntax
+     *
+     * @return
+     */
+    @Override
+    public String getImplementation() {
+        return null;
+    }
+
+    /**
+     * Returns a ArrayList of all possible variants of implementation in the syntax
+     *
+     * @return
+     */
+    @Override
+    public ArrayList<String> getConstructors() {
+        return null;
+    }
+
+    /**
      * Returns the parent of the node if there exists one and throws a NullPointerException if there is none.
      *
      * @return
@@ -102,7 +137,7 @@ public class Node implements iNode {
     }
 
     /**
-     * Returns a copy of the list of children, containing all actual children. But this way the list of children
+     * Returns a copy of the ArrayList of children, containing all actual children. But this way the ArrayList of children
      * cannot be altered from outside.
      *
      * @return
@@ -114,6 +149,16 @@ public class Node implements iNode {
             copy.add(n);
         }
         return copy;
+    }
+
+    /**
+     * Returns the ArrayList of siblings (nodes with the same parent
+     *
+     * @return
+     */
+    @Override
+    public ArrayList<iNode> getSiblings() {
+        return (ArrayList<iNode>) getParent().getChildren();
     }
 
     @Override
@@ -134,20 +179,20 @@ public class Node implements iNode {
     /**
      * Returns true, if the keyword is null, or x * " " (so also "")
      * or if the parent is null
-     * or if the children list is null
+     * or if the children ArrayList is null
      * @param node
      * @return
      */
     public boolean isNull(iNode node) {
         if(node == null)
             return true;
-        return isNull(node.getParent(), node.getChildren(), node.getKeyword());
+        return isNull(node.getParent(), (ArrayList<iNode>) node.getChildren(), node.getKeyword());
     }
 
     /**
      * Returns true, if the keyword is null, or x * " " (so also "")
      * or if the parent is null
-     * or if the children list is null
+     * or if the children ArrayList is null
      * @param parent
      * @param children
      * @param keyword
@@ -195,6 +240,17 @@ public class Node implements iNode {
     @Override
     public String getId() {
         return "N"+id;
+    }
+
+    /**
+     * Sets the variant of  implementation in the syntax to a new value implementation
+     *
+     * @param implementation
+     * @return
+     */
+    @Override
+    public void setImplementation(String implementation) {
+
     }
 
     @Override

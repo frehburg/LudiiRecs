@@ -1,6 +1,7 @@
 package main.java.interfaces;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface iTree<T> {
     /**
@@ -13,5 +14,5 @@ public interface iTree<T> {
      * Returns the tree in an inorder traversal
      * @return
      */
-    ArrayList<T> traversal();
+    List<T> traversal();
 }

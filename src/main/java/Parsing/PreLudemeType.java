@@ -1,7 +1,7 @@
 package main.java.Parsing;
 
 public enum PreLudemeType {
-        ROOT(-1, "rootro", null),
+        ERR(-1, "rootro", null),
         LUDEME(0, "ludeme", new char[]{'('}), // (
         COLLECTION(1, "collec", new char[]{'{'}), // {
         STRING(2, "string", new char[]{'"'}), // " or '
