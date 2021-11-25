@@ -1,7 +1,6 @@
 package main.java.interfaces;
 
-import main.java.old.Parsing.LudemeType;
-import main.java.old.Parsing.PreLudemeType;
+import main.java.parser.LudemeType;
 
 import java.util.List;
 
@@ -29,13 +28,6 @@ public interface iRecNode extends iNode{
      */
     List<iRecNode> getRecChildren();
 
-    /**
-     * Returns the first classification of the ludeme
-     * @return
-     */
-    PreLudemeType getPreLudemeType();
-
-    void setPreLudemeType(PreLudemeType pre);
 
     /**
      * Returns the updated classification of the ludeme

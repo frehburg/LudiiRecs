@@ -1,4 +1,4 @@
-package main.java.old.Parsing;
+package main.java.parser;
 
 public enum LudemeType {
     ERR(-1, "rootro", null, null,null),
@@ -30,7 +30,18 @@ public enum LudemeType {
             new char[]{'0', '1', '2', '3', '4',
             '5', '6', '7', '8', '9'}),
     RANGE_FIELDS(12, "rangfi", new char[]{'"'}, "..", new char[]{'"'}),
-    BOOLEAN(13, "boolea", new char[]{'T', 'F', 't'}, null, new char[]{'e'});
+    BOOLEAN(13, "boolea", new char[]{'T', 'F', 't'}, null, new char[]{'e'}),
+    PRE_LUDEME(-2, "ludeme", new char[]{'('}, null, null), // (
+    PRE_COLLECTION(-3, "collec", new char[]{'{'}, null, null), // {
+    PRE_STRING(-4, "string", new char[]{'"'}, null, null), // " or '
+    PRE_DEFINE_PARAMETER(17, "defpar", new char[]{'#'}, null, null), // # in define
+    PRE_LOWERCASE(-5, "optarg",
+            new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+                    'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}, null, null), // any letter
+    PRE_UPPERCASE(-6, "attri", new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O','P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}, null, null),
+    PRE_NUMBER(-7, "number", new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}, null, null),
+    PRE_OPTION(-8, "optarg",  new char[]{'<'}, null, null);
 
 
     private final String identifiyingSubsequence;

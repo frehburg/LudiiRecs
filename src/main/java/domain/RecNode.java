@@ -1,7 +1,6 @@
 package main.java.domain;
 
-import main.java.old.Parsing.LudemeType;
-import main.java.old.Parsing.PreLudemeType;
+import main.java.parser.LudemeType;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iRecNode;
 
@@ -24,7 +23,6 @@ public class RecNode implements iRecNode {
 
     //iRecNode
     private int occurrenceFrequency;
-    private PreLudemeType pre;
     private  LudemeType type;
 
     private String implementation;
@@ -42,7 +40,6 @@ public class RecNode implements iRecNode {
         // TODO: Work on null check
         if(isNull(parent, children, keyword))
             throw new NullPointerException("The node you are trying to create is null");
-        pre = PreLudemeType.ERR;
         type = LudemeType.ERR;
 
         this.implementation = "";
@@ -93,7 +90,6 @@ public class RecNode implements iRecNode {
         this.ID = counter++;
         //iRecNode
         this.occurrenceFrequency = -1;
-        pre = PreLudemeType.ERR;
         type = LudemeType.ERR;
 
         this.implementation = "";
@@ -323,15 +319,6 @@ public class RecNode implements iRecNode {
      *
      * @return
      */
-    @Override
-    public PreLudemeType getPreLudemeType() {
-        return pre;
-    }
-
-    @Override
-    public void setPreLudemeType(PreLudemeType pre) {
-        this.pre = pre;
-    }
 
     /**
      * Returns the updated classification of the ludeme
