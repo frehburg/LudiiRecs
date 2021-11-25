@@ -105,7 +105,7 @@ public class RecNode implements iRecNode {
      * @return
      */
     @Override
-    public iNode addChild(String keyword) throws NullPointerException {
+    public iRecNode addChild(String keyword) throws NullPointerException {
         iRecNode tmp = new RecNode(this, new ArrayList<iRecNode>(), keyword);
         this.children.add(tmp);
         if(this.nodeType != NodeType.ROOT)
