@@ -1,5 +1,8 @@
 package main.java.interfaces;
 
+import main.java.Parsing.LudemeType;
+import main.java.Parsing.PreLudemeType;
+
 import java.util.ArrayList;
 
 public interface iRecNode extends iNode{
@@ -20,5 +23,25 @@ public interface iRecNode extends iNode{
      */
     ArrayList<Double> getWeights();
 
+    /**
+     * Returns an arraylist of type iRecNode of the children
+     * @return
+     */
     ArrayList<iRecNode> getRecChildren();
+
+    /**
+     * Returns the first classification of the ludeme
+     * @return
+     */
+    PreLudemeType getPreLudemeType();
+
+    void setPreLudemeType(PreLudemeType pre);
+
+    /**
+     * Returns the updated classification of the ludeme
+     * @return
+     */
+    LudemeType getLudemeType();
+
+    void setLudemeType(LudemeType type);
 }

@@ -22,7 +22,7 @@ public interface iNode {
      * Returns the parent of the node if there exists one and throws a NullPointerException if there is none.
      * @return
      */
-    iNode getParent() throws NullPointerException;
+    iNode getParent();
 
     /**
      * Returns the list of children
@@ -42,7 +42,7 @@ public interface iNode {
      * Returns the id of the node
      * @return
      */
-    int getId();
+    String getId();
 
     /**
      * Returns true, if the keyword is null, or x * " " (so also "")
@@ -58,9 +58,9 @@ public interface iNode {
      *      * different ids.
      * @return
      */
-    public iNode clone();
+    iNode clone();
 
-    public boolean equals(Object o);
+    boolean equals(Object o);
 
-    public String toString();
+    String toString();
 }

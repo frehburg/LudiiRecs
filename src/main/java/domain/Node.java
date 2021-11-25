@@ -11,17 +11,17 @@ import java.util.ArrayList;
  * -use the addChild method to create all children. DO NOT use the constructor again
  */
 public class Node implements iNode {
-    protected static int counter = 0;
+    private static int counter = 0;
     /**
      * Given as a parent to every Node that has no parent
      */
     public static final iNode SUPER_NODE = new Node(null, new ArrayList<iNode>(), "SUPER_NODE", NodeType.SUPER);
 
-    protected iNode parent;
-    protected ArrayList<iNode> children;
-    protected String keyword;
-    protected NodeType nodeType;
-    protected int id;
+    private iNode parent;
+    private ArrayList<iNode> children;
+    private String keyword;
+    private NodeType nodeType;
+    private int id;
 
     public Node(String keyword) {
         this.parent = SUPER_NODE;
@@ -31,10 +31,9 @@ public class Node implements iNode {
         this.keyword = keyword;
         this.nodeType = NodeType.ROOT;
         this.id = counter++;
-
     }
 
-    protected Node(iNode parent, ArrayList<iNode> children, String keyword) {
+    private Node(iNode parent, ArrayList<iNode> children, String keyword) {
         this.parent = parent;
         this.children = children;
         this.keyword = keyword;
@@ -60,7 +59,7 @@ public class Node implements iNode {
      * @param keyword
      * @param nodeType
      */
-    protected Node(iNode parent, ArrayList<iNode> children, String keyword, NodeType nodeType) {
+    private Node(iNode parent, ArrayList<iNode> children, String keyword, NodeType nodeType) {
         this.parent = parent;
         this.children = children;
         this.keyword = keyword;
@@ -98,7 +97,7 @@ public class Node implements iNode {
      * @return
      */
     @Override
-    public iNode getParent() throws NullPointerException {
+    public iNode getParent() {
         return this.parent;
     }
 
@@ -154,7 +153,7 @@ public class Node implements iNode {
      * @param keyword
      * @return
      */
-    protected boolean isNull(iNode parent, ArrayList<iNode> children, String keyword) {
+    private boolean isNull(iNode parent, ArrayList<iNode> children, String keyword) {
         if(parent == null)
             return true;
         if(children == null)
@@ -186,7 +185,7 @@ public class Node implements iNode {
     public boolean equals(Object o) {
         if(o instanceof iNode) {
             iNode node = (iNode) o;
-            if(this.id == node.getId()) {
+            if(this.getId().equals(node.getId())) {
                 return true;
             }
         }
@@ -194,8 +193,8 @@ public class Node implements iNode {
     }
 
     @Override
-    public int getId() {
-        return id;
+    public String getId() {
+        return "N"+id;
     }
 
     @Override
