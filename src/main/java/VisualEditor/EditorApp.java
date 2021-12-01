@@ -21,7 +21,7 @@ public class EditorApp
         // Hard-coding tic-tac-toe tree
         //------------------------------------------------------
 
-        new EditorFrame();
+        new EditorFrame(getTestTree());
     }
 
     public static iTree getTestTree()
