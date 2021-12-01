@@ -10,7 +10,7 @@ import java.awt.geom.Ellipse2D;
 public class DragDropNode extends JPanel
 {
 
-    private final CircleNodeComponent node;
+    private final BasicNodeComponent node;
     private final Point nodeCorner;
     private Point prevPt;
     private final int radius = 50;
@@ -20,7 +20,7 @@ public class DragDropNode extends JPanel
 
     public DragDropNode(String label)
     {
-        node = new CircleNodeComponent(label, 0);
+        node = new BasicNodeComponent(label, 0);
 
         bound = new Ellipse2D.Double(0, 0, radius*2, radius*2);
         nodeCorner = new Point(0,0);

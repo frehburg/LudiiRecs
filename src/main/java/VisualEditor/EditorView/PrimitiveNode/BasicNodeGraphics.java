@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
-public class CircleNodeGraphics
+public class BasicNodeGraphics
 {
 
     private int x;
@@ -18,7 +18,7 @@ public class CircleNodeGraphics
     final private double CORD_SCALE = 0.15;
     final private double SIZE_SCALE = 0.7;
 
-    public CircleNodeGraphics(int x, int y, int size, String label)
+    public BasicNodeGraphics(int x, int y, int size, String label)
     {
         this.x = x;
         this.y = y;

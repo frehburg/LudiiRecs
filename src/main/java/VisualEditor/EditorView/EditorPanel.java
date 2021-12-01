@@ -1,6 +1,7 @@
 package main.java.VisualEditor.EditorView;
 
-import main.java.VisualEditor.EditorView.PrimitiveNode.CircleNodeComponent;
+import main.java.VisualEditor.EditorView.Edge.Edge;
+import main.java.VisualEditor.EditorView.PrimitiveNode.BasicNodeComponent;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iTree;
 
@@ -10,18 +11,25 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 // TODO: add scroll panels
+// FIXME: does not render until screen is resized
 public class EditorPanel extends JPanel implements MouseListener, MouseMotionListener
 {
 
     private final iTree<iNode> NodeTree;
-    private List<List<CircleNodeComponent>> nodeLayerList;
-    private static final int XSPACING = 70, YSPACING = 150;
+    private List<List<BasicNodeComponent>> nodeLayerList;
+    private HashMap<Integer, BasicNodeComponent> nodeComponentHashMap;
+    private List<Edge> edgeList;
+    private static final int XSPACING = 70, YSPACING = 75;
 
     public EditorPanel(iTree<iNode> NodeTree)
     {
+        nodeComponentHashMap = new HashMap<>();
+        edgeList = new ArrayList<>();
+
         nodeLayerList = new ArrayList<>();
         this.NodeTree = NodeTree;
         addMouseListener(this);
@@ -37,7 +45,7 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
     private void addVisualNodes()
     {
         List<List<iNode>> nodes = NodeTree.layerTraversal();
-        List<CircleNodeComponent> layer;
+        List<BasicNodeComponent> layer;
 
         for (List<iNode> l : nodes)
         {
@@ -46,11 +54,35 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
             {
                 // add node component to the list of components to be drawn
                 // FIXME: think of better implementation for the node id
-                CircleNodeComponent nodeComponent = new CircleNodeComponent(n.getKeyword(), n.getId().hashCode());
+                BasicNodeComponent nodeComponent = new BasicNodeComponent(n.getKeyword(), n.getId().hashCode());
+                nodeComponent.setChildrenIDs(n.getChildren());
+                nodeComponentHashMap.put(n.getId().hashCode(), nodeComponent);
                 layer.add(nodeComponent);
             }
             nodeLayerList.add(layer);
         }
+
+        // adding edges
+        for (List<BasicNodeComponent> l : nodeLayerList)
+        {
+            for (BasicNodeComponent n : l)
+            {
+
+                List<Integer> childrenIDs = n.getChildrenIDs();
+                if(childrenIDs != null)
+                {
+                    for (int id : childrenIDs)
+                    {
+                        edgeList.add(new Edge(n, nodeComponentHashMap.get(id)));
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void addEdges()
+    {
 
     }
 
@@ -60,12 +92,20 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
     public void paint(final Graphics g)
     {
         super.paintComponent(g);
-        for (int yCoordinate = 0; yCoordinate < nodeLayerList.size(); yCoordinate++) {
-            for (int xCoordinate = 0; xCoordinate < nodeLayerList.get(yCoordinate).size(); xCoordinate++) {
-                CircleNodeComponent node = nodeLayerList.get(yCoordinate).get(xCoordinate);
+        for (int yCoordinate = 0; yCoordinate < nodeLayerList.size(); yCoordinate++)
+        {
+            for (int xCoordinate = 0; xCoordinate < nodeLayerList.get(yCoordinate).size(); xCoordinate++)
+            {
+                BasicNodeComponent node = nodeLayerList.get(yCoordinate).get(xCoordinate);
                 node.drawComponents(g, xCoordinate*XSPACING, yCoordinate*YSPACING);
             }
         }
+
+        for (Edge edge : edgeList)
+        {
+            edge.drawEdge((Graphics2D) g);
+        }
+
         //final Graphics2D g2d = (Graphics2D)g;
         //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         //g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);

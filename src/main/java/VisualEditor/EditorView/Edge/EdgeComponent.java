@@ -3,16 +3,26 @@ package main.java.VisualEditor.EditorView.Edge;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
 
 public class EdgeComponent extends JComponent
 {
 
-    private Point A, B;
+    private Point2D A, B;
+    private String label;
 
-    public EdgeComponent(Point A, Point B)
+    public EdgeComponent(Point2D A, Point2D B)
     {
         this.A = A;
         this.B = B;
+        label = null;
+    }
+
+    public EdgeComponent(Point2D A, Point2D B, String label)
+    {
+        this.A = A;
+        this.B = B;
+        this.label = label;
     }
 
     @Override
@@ -24,10 +34,22 @@ public class EdgeComponent extends JComponent
 
     public void drawEdge(Graphics2D g2d)
     {
-
+        System.out.println("Drawing edge: " + A + B);
         final GeneralPath path = new GeneralPath();
         path.moveTo(A.getX(), A.getY());
-        path.curveTo(A.getX()+5.0, A.getY()+5.0, B.getX()-5.0, B.getY()-5.0, B.getX(), B.getY());
+        path.curveTo(A.getX()+50.0, A.getY(), B.getX()-50.0, B.getY(), B.getX(), B.getY());
+        g2d.draw(path);
+
+    }
+
+    public void drawEdge(Graphics2D g2d, Point2D A, Point2D B)
+    {
+        System.out.println("Drawing edge: " + A + B);
+        final GeneralPath path = new GeneralPath();
+        A = new Point((int)(A.getX())+30, (int)(A.getY()+30));
+        B = new Point((int)(B.getX())+30, (int)(B.getY()+30));
+        path.moveTo(A.getX(), A.getY());
+        path.curveTo(A.getX()+50.0, A.getY(), B.getX()-50.0, B.getY(), B.getX(), B.getY());
         g2d.draw(path);
 
     }
