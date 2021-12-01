@@ -128,7 +128,14 @@ public class Parser {
             char cur = contents.charAt(i);
             if(cur == searched) {
                 if(level == 0) {
-                    return i + 1;
+                    //had to put this extra case in to identify ranges
+                    if(searched == '"'
+                            && contents.charAt(i+1) == '.'
+                            && contents.charAt(i+2) == '.') {
+                        i += 3;
+                    } else {
+                        return i + 1;
+                    }
                 }
             }
             if(cur == '(' || cur == '{')
@@ -233,6 +240,28 @@ public class Parser {
 
             default: return LudemeType.ERR;
         }
+        // TODO make it into char values, but right now the following doesn´t work
+        /*
+        if(first == 28) { // (
+            return LudemeType.PRE_LUDEME;
+        } else if(first == 123) { // {
+            return LudemeType.PRE_COLLECTION;
+        } else if(first == 22) { // "
+            return LudemeType.PRE_STRING;
+        } else if(first == 23) { // #
+            return LudemeType.PRE_DEFINE_PARAMETER;
+        }  else if(first >= 97 && first <= 122) { // lowercase letters
+            return LudemeType.PRE_LOWERCASE;
+        }  else if((first >= 48 && first <= 57) || first == 46) { // digits or .
+            return LudemeType.PRE_NUMBER;
+        } else if(first >= 65 && first <= 90) { // uppercase letters
+            return LudemeType.PRE_UPPERCASE;
+        } else if(first == 60) { // <
+            return LudemeType.PRE_OPTION;
+        } else {
+            return LudemeType.ERR;
+        }
+        */
     }
 
     public static LudemeType reClassify(LudemeType pre, String ludeme) {

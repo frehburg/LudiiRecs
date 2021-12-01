@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Test {
     public static void main(String[] args) {
-        String fileName = "src/main/resources/Tic-Tac-Toe.lud";
+        String fileName = "src/main/resources/testAll.lud";
         File f = new File(fileName);
         String contents;
         if(FileUtils.isFileDotLud(fileName)) {
