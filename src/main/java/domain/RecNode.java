@@ -257,7 +257,7 @@ public class RecNode implements iRecNode {
 
     @Override
     public String toString() {
-        String s = "(Node id: "+this.getId()+", keyword: "+this.getKeyword()+", occFrq: "+occurrenceFrequency+" parent: "+this.getParent().getKeyword()+", nodeType: "
+        /**String s = "(Node id: "+this.getId()+", keyword: "+this.getKeyword()+", occFrq: "+occurrenceFrequency+" parent: "+this.getParent().getKeyword()+", nodeType: "
                 +this.getNodeType() + ", children: [";
         ArrayList<Double> weights = this.getWeights();
         for(int i = 0; i < this.getChildrenSize(); i++) {
@@ -266,7 +266,8 @@ public class RecNode implements iRecNode {
             s += c.getKeyword()+" w: "+w+", ";
         }
         s += "])";
-        return s;
+        return s;**/
+        return this.getId();
     }
 
     /**
@@ -333,5 +334,10 @@ public class RecNode implements iRecNode {
     @Override
     public void setLudemeType(LudemeType type) {
         this.type = type;
+    }
+
+    @Override
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 }

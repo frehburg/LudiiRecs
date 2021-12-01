@@ -87,4 +87,6 @@ public interface iNode {
     boolean equals(Object o);
 
     String toString();
+
+    void setKeyword(String keyword);
 }

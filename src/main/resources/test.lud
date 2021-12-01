@@ -1,2 +1,3 @@
-(game (hello (test (test2 (test3)))))
-(metadata (meta1)
+(game "Tic-Tac-Toe"  
+    (players 2) 
+)

@@ -254,12 +254,18 @@ public class Node implements iNode {
 
     @Override
     public String toString() {
-        String s = "(Node id: "+this.getId()+", keyword: "+this.getKeyword()+", parent: "+this.getParent().getKeyword()+", nodeType: "
+        /**String s = "(Node id: "+this.getId()+", keyword: "+this.getKeyword()+", parent: "+this.getParent().getKeyword()+", nodeType: "
                 +this.getNodeType() + ", children: [";
         for(iNode c : children) {
             s += c.getKeyword()+", ";
         }
         s += "])";
-        return s;
+        return s;**/
+        return this.getId();
+    }
+
+    @Override
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 }
