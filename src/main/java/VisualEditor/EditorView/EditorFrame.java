@@ -9,16 +9,13 @@ import static main.java.VisualEditor.EditorApp.getTestTree;
 public class EditorFrame extends JFrame
 {
 
-    public EditorFrame()
+    public EditorFrame(iTree tree)
     {
         setTitle("Drag&Drop test");
         setSize(600, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
-
-        // testing on hard-coded tree
-        iTree hardCodedTree = getTestTree();
-        add(new EditorPanel(hardCodedTree));
+        add(new EditorPanel(tree));
 
     }
 
