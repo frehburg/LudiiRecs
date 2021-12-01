@@ -24,8 +24,10 @@ public class EditorApp
 
         // Hard-coding tic-tac-toe tree
         //------------------------------------------------------
-        String tictactoepath = "src/main/resources/Tic-Tac-Toe.lud", testpath = "src/main/resources/test.lud";
-        String fileName = tictactoepath;
+        String tic = "src/main/resources/Tic-Tac-Toe.lud",
+                test = "src/main/resources/test.lud",
+                all = "src/main/resources/testAll.lud";
+        String fileName = test;
         File f = new File(fileName);
         String contents;
         if(FileUtils.isFileDotLud(fileName)) {

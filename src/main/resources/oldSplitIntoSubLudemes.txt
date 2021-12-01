@@ -1,0 +1,140 @@
+if(foundType == LudemeType.PRE_LUDEME) {
+            return splitIntoSubLudemes(contents, LudemeType.PRE_LOWERCASE);
+        }
+        boolean debug = true;
+
+        //step 1: search for first ')'
+        ArrayList<String> subludemes = new ArrayList<>();
+        int i = 0;
+        int start = 0;
+        int end = -1;
+        int nestingLevel = -1, startNestingLevel = 0;
+        boolean foundFirst = false;
+        boolean foundSecond = false;
+        while(i < contents.length()) {
+            char cur = contents.charAt(i);
+            //need to find fist space
+            if(!foundFirst) {
+                //from first character we can classify it into a type
+                foundType = preClassify(cur);
+                if(foundType == LudemeType.ERR) {
+                    foundFirst = false;
+                } else {
+                    if (cur == '(' || cur == '{') {
+                        nestingLevel = -1;
+                        startNestingLevel = 0;
+                    }
+                    foundFirst = true;
+                    start = i;
+                }
+            }
+            else if(foundFirst){
+                if(debug) System.out.println(foundType);
+                switch (foundType) {
+                    case PRE_LUDEME:
+                        //need to find ')'
+                        //keep track of nesting
+                        if(debug)System.out.println("nesting "+nestingLevel);
+                        if(cur == '(')
+                            nestingLevel++;
+                        if(cur == ')') {
+                            nestingLevel--;
+                            if(nestingLevel == (startNestingLevel - 1)) {
+                                //System.out.println("end");
+                                //HOORAY we have closed the ludeme
+                                foundSecond = true;
+                                end = i + 1;
+                            }
+                        }
+                        break;
+                    case PRE_COLLECTION:
+                        if(i == 0) {
+                            subludemes.add("{}");
+                        }
+                        //need to find '}'
+                        //keep track of nesting
+                        if(cur == '{')
+                            nestingLevel++;
+                        if(cur == '}') {
+                            nestingLevel--;
+                            if(nestingLevel == (startNestingLevel - 1)) {
+                                //HOORAY we have closed the ludeme
+                                foundSecond = true;
+                                end = i + 1;
+                            }
+                        }
+                        break;
+                    case PRE_STRING:
+                        //need to find "
+                        if(cur == '"') {
+                            //found a complete string
+                            foundSecond = true;
+                            end= i + 1;
+                        }
+                        break;
+                    case PRE_DEFINE_PARAMETER:
+                    case PRE_UPPERCASE:
+                    case PRE_NUMBER:
+                        //need to find space
+                        if(cur == ' ') {
+                            //found a complete string
+                            foundSecond = true;
+                            end =  i;
+                        }
+                        break;
+
+                    case PRE_LOWERCASE:
+                        //need to find colon for optional argument name
+                        if(cur == ':') {
+                            //found a complete optional name
+                            //because we also want to parse the value
+                            if(contents.charAt(i + 1) == ' ') {
+                                foundType = preClassify(contents.charAt(i + 2));
+                            } else {
+                                foundType = preClassify(contents.charAt(i + 1));
+                            }
+                        }
+                        //need to find space
+                        else if(cur == ' ') {
+                            //found a complete string
+                            foundSecond = true;
+                            end =  i;
+                        }
+                        break;
+                    case PRE_OPTION:
+                        //need to find '>'
+                        if(cur == '>') {
+                            //found a complete options tag
+                            foundSecond = true;
+                            end= i + 1;
+                        }
+                }
+                if(foundSecond) {
+                    subludemes.add(contents.substring(start,end));
+                    if(debug)System.out.println(i + " " + cur + " 1.:" + foundFirst + " 2.:" + foundSecond);
+                    if(debug)PrintUtils.printCollection(subludemes);
+                    if(debug)System.out.println("FOUND: " + contents.substring(start,end));
+                    start = -1;
+                    end = -1;
+                    foundFirst = false;
+                    foundSecond = false;
+                } else {
+                    if(debug)System.out.println(i + " " + cur + " 1.:" + foundFirst + " 2.:" + foundSecond);
+                    if(debug)PrintUtils.printCollection(subludemes);
+                    if(foundFirst) {
+                        if(debug)System.out.println("CURRENT SELECTION: " + contents.substring(start, i + 1));
+                    }  else {
+                        if(debug)System.out.println("SEARCHING");
+                    }
+                }
+
+                if(debug)System.out.println(" ");
+            }
+            i++;
+        }
+        //check if there is still an open ludeme
+        if(foundFirst)
+            subludemes.add(contents.substring(start,contents.length()-1));//REMOVE LAST CHAR
+
+        PrintUtils.printCollection(subludemes);
+        return subludemes.toArray(String[]::new);

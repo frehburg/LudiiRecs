@@ -1,0 +1,28 @@
+(game
+    (+
+        {0.01 .02 3.}
+        "String"
+        #defineParameter
+        optionalArgumentName
+        1
+        Attribute
+        12..15
+        <OptionLabel>
+        <optionArgumentLabel>
+        "A1".."C2"
+        true
+        False
+    )
+    {0.01 .02 3.} 
+    "String"
+    #defineParameter
+    optionalArgumentName
+    1
+    Attribute
+    12..15
+    <OptionLabel>
+    <optionArgumentLabel>
+    "A1".."C2"
+    true
+    False
+)

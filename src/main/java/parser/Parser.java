@@ -4,6 +4,7 @@ import main.java.Utils.PrintUtils;
 import main.java.domain.NodeType;
 import main.java.domain.RecNode;
 import main.java.domain.Tree;
+import main.java.domain.Tuple;
 import main.java.interfaces.iRecNode;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class Parser {
     }
 
     private static void recursiveParse(iRecNode n) {
-        String ludeme = n.getKeyword();
+        /*String ludeme = n.getKeyword();
         char first = ludeme.charAt(0);
         LudemeType type = preClassify(first);
         n.setLudemeType(type);
@@ -45,17 +46,16 @@ public class Parser {
 
         // Go through the ludeme
         if(ludeme.length() > 1)
-            subLudemes = splitIntoSubLudemes(ludeme.substring(1), type);
+            subLudemes = splitIntoSubLudemes(ludeme);
         else
             return;
-        System.out.println(Arrays.asList(subLudemes).toString());
         kw = subLudemes[0];
         n.setKeyword(kw);
         subLudemes = Arrays.stream(subLudemes).toList().subList(1, subLudemes.length).toArray(new String[0]);
         for(String s : subLudemes) {
             RecNode c = (RecNode) n.addChild(s);
             recursiveParse(c);
-        }
+        }*/
     }
     /**
      * Only works if all subs are ludemes with () around them
@@ -113,144 +113,110 @@ public class Parser {
     }
 
 
-    public static String[] splitIntoSubLudemes(String contents, LudemeType foundType) {
-        if(foundType == LudemeType.PRE_LUDEME) {
-            return splitIntoSubLudemes(contents, LudemeType.PRE_LOWERCASE);
-        }
-        boolean debug = true;
-
-        //step 1: search for first ')'
-        ArrayList<String> subludemes = new ArrayList<>();
+    public static ArrayList<Tuple<String,ArrayList<String>, LudemeType>> splitIntoSubLudemes(String contents) {
         int i = 0;
-        int start = 0;
-        int end = -1;
-        int nestingLevel = -1, startNestingLevel = 0;
-        boolean foundFirst = true;
-        boolean foundSecond = false;
-        while(i < contents.length()) {
-            char cur = contents.charAt(i);
-            //need to find fist space
-            if(!foundFirst) {
-                //from first character we can classify it into a type
-                foundType = preClassify(cur);
-                if(foundType == LudemeType.ERR) {
-                    foundFirst = false;
-                } else {
-                    if (cur == '(' || cur == '{') {
-                        nestingLevel = 0;
-                        startNestingLevel = 0;
-                    }
-                    foundFirst = true;
-                    start = i;
-                }
-            }
-            else if(foundFirst){
-                if(debug) System.out.println(foundType);
-                switch (foundType) {
-                    case PRE_LUDEME:
-                        //need to find ')'
-                        //keep track of nesting
-                        if(debug)System.out.println("nesting "+nestingLevel);
-                        if(cur == '(')
-                            nestingLevel++;
-                        if(cur == ')') {
-                            nestingLevel--;
-                            if(nestingLevel == (startNestingLevel - 1)) {
-                                //System.out.println("end");
-                                //HOORAY we have closed the ludeme
-                                foundSecond = true;
-                                end = i + 1;
-                            }
-                        }
-                        break;
-                    case PRE_COLLECTION:
-                        //need to find '}'
-                        //keep track of nesting
-                        if(cur == '{')
-                            nestingLevel++;
-                        if(cur == '}') {
-                            nestingLevel--;
-                            if(nestingLevel == (startNestingLevel - 1)) {
-                                //HOORAY we have closed the ludeme
-                                foundSecond = true;
-                                end = i + 1;
-                            }
-                        }
-                        break;
-                    case PRE_STRING:
-                        //need to find "
-                        if(cur == '"') {
-                            //found a complete string
-                            foundSecond = true;
-                            end= i + 1;
-                        }
-                        break;
-                    case PRE_DEFINE_PARAMETER:
-                    case PRE_UPPERCASE:
-                    case PRE_NUMBER:
-                        //need to find space
-                        if(cur == ' ') {
-                            //found a complete string
-                            foundSecond = true;
-                            end =  i;
-                        }
-                        break;
+        int previous = i;
+        ArrayList<Tuple<String,ArrayList<String>, LudemeType>> list = new ArrayList<>();
+        int l = contents.length();
+        while(i < l - 1) {
+            ArrayList<String> subludemes = new ArrayList<>();
+            LudemeType foundType = preClassify(contents.charAt(previous));
+            String keyword = "";
+            int end = 0;
+            switch(foundType){
+                case PRE_OPTION:
+                case PRE_LOWERCASE:
+                case PRE_DEFINE_PARAMETER:
+                case PRE_NUMBER:
+                case PRE_UPPERCASE:
+                    end = previous + findEndOfWord(contents.substring(previous));
+                    keyword = contents.substring(previous,end);
+                    break;
+                case PRE_STRING:
+                    end = findAtSameLevel(contents,'"', previous);
+                    keyword = contents.substring(previous,end);
+                    break;
+                case PRE_COLLECTION:
+                    end = findAtSameLevel(contents,'}', previous);
+                    keyword = "{}";
+                    subludemes = findItemsAtEqualLevel(contents.substring(previous + 1,end - 1));
+                    break;
+                case PRE_LUDEME:
+                    end = findAtSameLevel(contents,')', previous);
+                    keyword = contents.substring(1,findEndOfWord(contents));
+                    subludemes = findItemsAtEqualLevel(contents.substring(previous + 1,end - 1));
+                    break;
 
-                    case PRE_LOWERCASE:
-                        //need to find colon for optional argument name
-                        if(cur == ':') {
-                            //found a complete optional name
-                            //because we also want to parse the value
-                            if(contents.charAt(i + 1) == ' ') {
-                                foundType = preClassify(contents.charAt(i + 2));
-                            } else {
-                                foundType = preClassify(contents.charAt(i + 1));
-                            }
-                        }
-                        //need to find space
-                        else if(cur == ' ') {
-                            //found a complete string
-                            foundSecond = true;
-                            end =  i;
-                        }
-                        break;
-                    case PRE_OPTION:
-                        //need to find '>'
-                        if(cur == '>') {
-                            //found a complete options tag
-                            foundSecond = true;
-                            end= i + 1;
-                        }
-                }
-                if(foundSecond) {
-                    subludemes.add(contents.substring(start,end));
-                    if(debug)System.out.println(i + " " + cur + " 1.:" + foundFirst + " 2.:" + foundSecond);
-                    if(debug)PrintUtils.printCollection(subludemes);
-                    if(debug)System.out.println("FOUND: " + contents.substring(start,end));
-                    start = -1;
-                    end = -1;
-                    foundFirst = false;
-                    foundSecond = false;
-                } else {
-                    if(debug)System.out.println(i + " " + cur + " 1.:" + foundFirst + " 2.:" + foundSecond);
-                    if(debug)PrintUtils.printCollection(subludemes);
-                    if(foundFirst) {
-                        if(debug)System.out.println("CURRENT SELECTION: " + contents.substring(start, i + 1));
-                    }  else {
-                        if(debug)System.out.println("SEARCHING");
-                    }
-                }
-
-                if(debug)System.out.println(" ");
             }
-            i++;
+            i = end;
+            previous = end + 1;
+
+            //add all
+            Tuple<String, ArrayList<String>, LudemeType> t = new Tuple(keyword,subludemes, foundType);
+            list.add(t);
         }
-        //check if there is still an open ludeme
-        if(foundFirst)
-            subludemes.add(contents.substring(start,contents.length()-1));//REMOVE LAST CHAR
+        return list;
+    }
 
-        PrintUtils.printCollection(subludemes);
-        return subludemes.toArray(String[]::new);
+    private static ArrayList<String> findItemsAtEqualLevel(String contents) {
+        ArrayList<String> list = new ArrayList<>();
+        int level = 0;
+        int previous = 0;
+        for(int i = 0; i < contents.length(); i++) {
+            char cur = contents.charAt(i);
+            if(cur == '(' || cur == '{')
+                level++;
+            if(cur == ')' || cur == '}')
+                level--;
+
+            if(cur == ' ' || i == contents.length() - 1) {
+                if(level == 0) {
+                    list.add(contents.substring(previous, i + 1));
+                    previous = i + 1;
+                }
+            }
+
+        }
+        return list;
+    }
+
+    private static int findAtSameLevel(String contents, char searched, int posOfFirst) {
+        char first = contents.charAt(posOfFirst);
+        int level = 0;
+        for(int i = posOfFirst + 1; i < contents.length(); i++) {
+            char cur = contents.charAt(i);
+            if(cur == searched) {
+                if(level == 0) {
+                    return i + 1;
+                }
+            }
+            if(cur == '(' || cur == '{')
+                level++;
+            if(cur == ')' || cur == '}')
+                level--;
+
+        }
+        String exc = "No closing char: " + searched + " could be found in: " + contents;
+        throw new IllegalStateException(exc);
+    }
+
+    /**
+     * Used to find the end of the word of a
+     * - PRE_OPTION
+     * - PRE_UPPERCASE
+     * - PRE_LOWERCASE
+     * - PRE_DEFINE_PARAMETER
+     * - PRE_NUMBER
+     * @param contents
+     * @return
+     */
+    private static int findEndOfWord(String contents) {
+        for(int i = 0; i < contents.length(); i++) {
+            char cur = contents.charAt(i);
+            if(cur == ' ' || cur == ')' || cur == '}') //these can be around all of the types
+                return i;
+        }
+        return contents.length();
     }
 
     public static LudemeType preClassify(char first) {
