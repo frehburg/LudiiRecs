@@ -12,7 +12,21 @@ import java.util.ArrayList;
 
 public class Test {
     public static void main(String[] args) {
-        String test  = "src/main/resources/test.lud";
+        String fileName = "src/main/resources/Tic-Tac-Toe.lud";
+        File f = new File(fileName);
+        String contents;
+        if(FileUtils.isFileDotLud(fileName)) {
+            try {
+               contents = FileUtils.getContents(f);
+
+                iTree tree = Parser.getTree(contents);
+                new EditorFrame(tree);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+           }
+        }
+        //System.out.println(Parser.splitIntoSubLudemes("2"));
+        /*String test  = "src/main/resources/test.lud";
         String fileName = test;
         File f = new File(fileName);
         String contents;
@@ -27,7 +41,7 @@ public class Test {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
     }
 }

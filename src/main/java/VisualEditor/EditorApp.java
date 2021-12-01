@@ -19,8 +19,6 @@ public class EditorApp
 
         // Hard-coding tic-tac-toe tree
         //------------------------------------------------------
-        String s = ")(";
-        System.out.println(")(");
         new EditorFrame(getTestTree());
 
 //        String fileName = "src/main/resources/Tic-Tac-Toe.lud";

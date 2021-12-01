@@ -6,15 +6,16 @@ import main.java.domain.RecNode;
 import main.java.domain.Tree;
 import main.java.domain.Tuple;
 import main.java.interfaces.iRecNode;
+import main.java.interfaces.iTree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Parser {
-    public static Tree getTree(String gameDescription) {
+    public static iTree getTree(String gameDescription) {
         gameDescription = preProcessing(gameDescription);
-        Tree t = parse(gameDescription);
+        iTree t = parse(gameDescription);
         t = postProcessing(t);
         return t;
     }
@@ -24,92 +25,31 @@ public class Parser {
         return gameDescription;
     }
 
-    private static Tree parse(String gameDescription) {
+    private static iTree parse(String gameDescription) {
         //1. Create a node with the whole gameDescription as the keyword
         iRecNode root = new RecNode("root");
-        String[] subLudemes = firstSplit(gameDescription);
-        for(String s : subLudemes) {
-            RecNode c = (RecNode) root.addChild(s);
-            recursiveParse(c);
+        ArrayList<Tuple<String,ArrayList<String>, LudemeType>> subLudemes = splitIntoSubLudemes(gameDescription);
+        for(Tuple<String,ArrayList<String>, LudemeType> t : subLudemes) {
+            iRecNode c = root.addChild(t.getR());
+            recursiveParse(c, t.getS());
         }
-        Tree t = new Tree(root);
+        iTree t = new Tree(root);
         return t;
     }
 
-    private static void recursiveParse(iRecNode n) {
-        /*String ludeme = n.getKeyword();
-        char first = ludeme.charAt(0);
-        LudemeType type = preClassify(first);
-        n.setLudemeType(type);
-        String[] subLudemes;
-        String kw;
-
-        // Go through the ludeme
-        if(ludeme.length() > 1)
-            subLudemes = splitIntoSubLudemes(ludeme);
-        else
-            return;
-        kw = subLudemes[0];
-        n.setKeyword(kw);
-        subLudemes = Arrays.stream(subLudemes).toList().subList(1, subLudemes.length).toArray(new String[0]);
-        for(String s : subLudemes) {
-            RecNode c = (RecNode) n.addChild(s);
-            recursiveParse(c);
-        }*/
-    }
-    /**
-     * Only works if all subs are ludemes with () around them
-     * Takes the contents of a .lud file, applies preprocessing and then splits it into ludemes, while correcting spacing
-     * and removing comments.
-     * Results in a String array with each String being either
-     * - the game ludeme,
-     * - the metadata ludeme or
-     * - a define ludeme.
-     *
-     * @param contents
-     * @return String array of ludemes in .lud file contents string
-     */
-    public static String[] firstSplit(String contents) {
-        contents = PrintUtils.insertSpaceAroundBrackets(contents);
-        //step 1: search for first ')'
-        int nestingLevel = -1; // root is not actually part of the tree
-        int startNestingLevel = 0;
-        List<String> ludemes = new ArrayList<>();
-        int start = -1;
-        int end;
-        for(int i = 0; i < contents.length(); i++) {
-            char cur = contents.charAt(i);
-            //we have opened a ludeme
-            if(start > -1) {
-                if(cur == '(')
-                    nestingLevel++;
-                if(cur == ')') {
-                    nestingLevel--;
-                    if(nestingLevel == (startNestingLevel - 1)) {
-                        //System.out.println("end");
-                        //HOORAY we have closed the ludeme
-                        end = i + 1;
-                        String ludeme = contents.substring(start, end);
-                        ludemes.add(ludeme);
-                        start = -1;
-                    }
-                }
-
-            } else {
-                //we have not yet opened a ludeme
-                if(cur == '(') { // we have a new ludeme
-                    // new '(' so nested
-                    nestingLevel++;
-                    startNestingLevel = nestingLevel;
-                    // to select ludeme later
-                    start = i;
-                }
-
+    private static void recursiveParse(iRecNode n, ArrayList<String> subludemes) {
+        System.out.println("-------------------");
+        System.out.println(n.getKeyword());
+        for(String s : subludemes) {
+            ArrayList<Tuple<String,ArrayList<String>, LudemeType>> tupleList = splitIntoSubLudemes(s);
+            System.out.println(s);
+            System.out.println(tupleList);
+            for(Tuple<String,ArrayList<String>, LudemeType> t : tupleList) {
+                iRecNode c = n.addChild(t.getR());
+                recursiveParse(c, t.getS());
             }
-            //System.out.println(cur + " " + nestingLevel);
         }
-        PrintUtils.printCollection(ludemes);
-        return ludemes.toArray(String[]::new);
+
     }
 
 
@@ -118,7 +58,7 @@ public class Parser {
         int previous = i;
         ArrayList<Tuple<String,ArrayList<String>, LudemeType>> list = new ArrayList<>();
         int l = contents.length();
-        while(i < l - 1) {
+        do {
             ArrayList<String> subludemes = new ArrayList<>();
             LudemeType foundType = preClassify(contents.charAt(previous));
             String keyword = "";
@@ -145,6 +85,7 @@ public class Parser {
                     end = findAtSameLevel(contents,')', previous);
                     keyword = contents.substring(1,findEndOfWord(contents));
                     subludemes = findItemsAtEqualLevel(contents.substring(previous + 1,end - 1));
+                    subludemes.remove(0);
                     break;
 
             }
@@ -154,7 +95,7 @@ public class Parser {
             //add all
             Tuple<String, ArrayList<String>, LudemeType> t = new Tuple(keyword,subludemes, foundType);
             list.add(t);
-        }
+        }while(i < l - 1);
         return list;
     }
 
@@ -341,7 +282,7 @@ public class Parser {
         }
     }
 
-    private static Tree postProcessing(Tree t) {
+    private static iTree postProcessing(iTree t) {
         //TODO
         return t;
     }
