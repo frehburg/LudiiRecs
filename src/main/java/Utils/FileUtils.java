@@ -35,6 +35,8 @@ public class FileUtils {
                 content = content + l;
             }
         }
+        String s = ")(";
+        content.replaceAll(s, ") (");
         return content;
     }
 }
