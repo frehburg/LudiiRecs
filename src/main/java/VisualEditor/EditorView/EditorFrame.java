@@ -4,8 +4,6 @@ import main.java.interfaces.iTree;
 
 import javax.swing.*;
 
-import static main.java.VisualEditor.EditorApp.getTestTree;
-
 public class EditorFrame extends JFrame
 {
 
@@ -15,7 +13,7 @@ public class EditorFrame extends JFrame
         setSize(600, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
-        add(new EditorPanel(tree));
+        add(new JScrollPane(new EditorPanel(tree)));
 
     }
 
