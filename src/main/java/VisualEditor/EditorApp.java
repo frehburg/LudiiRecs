@@ -1,11 +1,15 @@
 package main.java.VisualEditor;
 
+import main.java.Utils.FileUtils;
 import main.java.VisualEditor.EditorView.EditorFrame;
 import main.java.domain.Node;
 import main.java.domain.Tree;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iTree;
+import main.java.parser.Parser;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 
 
 public class EditorApp
@@ -20,8 +24,19 @@ public class EditorApp
 
         // Hard-coding tic-tac-toe tree
         //------------------------------------------------------
+        String fileName = "/res/Tic-Tac-Toe.lud";
+        File f = new File(fileName);
+        String contents;
+        if(FileUtils.isFileDotLud(fileName)) {
+            try {
+                contents = FileUtils.getContents(f);
 
-        new EditorFrame(getTestTree());
+                iTree tree = Parser.getTree(contents);
+                new EditorFrame(tree);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static iTree getTestTree()
