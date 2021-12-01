@@ -1,6 +1,8 @@
 package main.java.parser;
 
+import main.java.Utils.FileUtils;
 import main.java.Utils.PrintUtils;
+import main.java.VisualEditor.EditorView.EditorFrame;
 import main.java.domain.NodeType;
 import main.java.domain.RecNode;
 import main.java.domain.Tree;
@@ -8,26 +10,52 @@ import main.java.domain.Tuple;
 import main.java.interfaces.iRecNode;
 import main.java.interfaces.iTree;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class is responsible for parsing a .lud file into an iTree made up of iRecNodes.
+ * @author Jan-Filip Rehburg
+ */
 public class Parser {
-    public static iTree getTree(String gameDescription) {
-        gameDescription = preProcessing(gameDescription);
-        iTree t = parse(gameDescription);
-        t = postProcessing(t);
-        return t;
+    public static boolean verbose = false;
+
+    /**
+     * This is the main method of this class. It receives the name of a file. If the file is a
+     * .lud file, it tries to read it in. If this does not succeed an Exception is thrown.
+     * If it succeeds, the file gets read in and preprocessed by FileUtils.
+     * Then its contents are parsed into an iTree object.
+     * To this object postprocessing is applied before it is returned.
+     * @param fileLocation
+     * @return iTree parsed game tree
+     */
+    public static iTree getTree(String fileLocation) throws Exception {
+        File f = new File(fileLocation);
+        String gameDescription;
+        if(FileUtils.isFileDotLud(fileLocation)) {
+            gameDescription = FileUtils.getContents(f); //read in and preprocessing
+            iTree t = parse(gameDescription); //parsing
+            t = postProcessing(t); //postprocessing
+            return t;
+        } else {
+            throw new Exception("The file could not be parsed. Make sure that you only try to parse .lud files!");
+        }
     }
 
-    private static String preProcessing(String gameDescription) {
-        //TODO
-        return gameDescription;
-    }
-
+    /**
+     * This method takes in a String gameDescription and parses it into an iTree object. It calls
+     * recursiveParse(), which contains further parsing logic and splitIntoSubLudemes with the
+     * core of the logic.
+     * @param gameDescription
+     * @return iTree parsed game tree
+     */
     private static iTree parse(String gameDescription) {
-        //1. Create a node with the whole gameDescription as the keyword
+        //create root of the tree, to which all other nodes are children
         iRecNode root = new RecNode("root");
+        //list of necessary information to create children of the node
         ArrayList<Tuple<String,ArrayList<String>, LudemeType>> subLudemes = splitIntoSubLudemes(gameDescription);
         for(Tuple<String,ArrayList<String>, LudemeType> t : subLudemes) {
             iRecNode c = root.addChild(t.getR());
@@ -37,14 +65,30 @@ public class Parser {
         return t;
     }
 
+    /**
+     * This method is recursively called to assemble the parsed game tree in all of its height.
+     * It takes in a node n and adds all of its children to it. Then it is recursively called for
+     * all of their children. The anchor of recursion is implicit: once a ludeme does not have any
+     * children anymore the corresponding subludemes list will be empty. The recursive call is
+     * called on all items of the list. If the list is empty there are no calls.
+     * Thus, it always stops.
+     *
+     * @param n
+     * @param subludemes
+     */
     private static void recursiveParse(iRecNode n, ArrayList<String> subludemes) {
-        System.out.println("-------------------");
-        System.out.println(n.getKeyword());
+        if(verbose)System.out.println("-------------------");
+        if(verbose)System.out.println(n.getKeyword());
+        //goes through all subludemes and splits them into their subludemes respectively
         for(String s : subludemes) {
             ArrayList<Tuple<String,ArrayList<String>, LudemeType>> tupleList = splitIntoSubLudemes(s);
-            System.out.println(s);
-            System.out.println(tupleList);
+            if(verbose)System.out.println(s);
+            if(verbose)System.out.println(tupleList);
+            //for each of the initial subludemes a new node is created,
+            //and as its children the subsubludemes are passed on into a recursive call
             for(Tuple<String,ArrayList<String>, LudemeType> t : tupleList) {
+                //R is the first parameter in the Tuple
+                //S is the second parameter in the Tuple
                 iRecNode c = n.addChild(t.getR());
                 recursiveParse(c, t.getS());
             }
@@ -53,11 +97,55 @@ public class Parser {
     }
 
 
+    /**
+     * This method holds the core of the parsing logic. It gets used by parse() and recursiveParse()
+     * and uses findItemsAtEqualLevel(), findAtSameLevel(), findEndOfWord(), as well as preClassify().
+     * This method loops over the contents String. At all times it has a character cur, that corresponds
+     * to the character at the currently considered position in the string. (contents.charAt(i) )
+     * In the beginning, this is the first character of the contents string.
+     * It gets classified using the method preClassify(). Depending on the classification, different courses of action
+     * are taken.
+     * 1. If the classification is on of the following:
+     *  a) PRE_OPTION,
+     *  b) PRE_UPPERCASE,
+     *  c) PRE_LOWERCASE,
+     *  d) PRE_DEFINE_PARAMETER or
+     *  e) PRE_NUMBER,
+     * then we just need to find the end of this ludeme/ word. We get the index of its last character from the method
+     * findEndOfWord(). The ludeme/ its keyword is simply the string in between our cur character and the character at
+     * this position. It gets added to the subludemes list.
+     *
+     * 2. PRE_STRING
+     * We first find the closing " using the method findAtSameLevel with parameter searched = '"'. It is assumed that
+     * Strings do not contain Strings. If the second quotation mark is followed by two points "..", then it is a range
+     * and we also include the uper limit of the range. e.g.: "A1".."B12". Again, this is the whole ludeme and we add it
+     * to the subludemes list.
+     * 3.
+     *  a) PRE_COLLECTION
+     *  b) PRE_LUDEME
+     * These two classifications lead down a very similar road, bu differences will be pointed out.
+     * The keyword of the collection is "{}". The keyword of the ludeme is the word/ sign that follows directly after the
+     * opening bracket "(". The keyword is set.
+     * Then, using findAtSameLevel() the end of the ludeme/ collection is determined. Everything in between is passed on
+     * to findItemsAtEqualLevel(), which determines all items of the collection/ parameters of the ludeme.
+     * It returns a list. All items of this list are added to the subludemes list.
+     *
+     * Note that the necessary information to create a node, its keyword, subludemes and ludeme type, are stored in a
+     * specially created Tuple class. These tuples are accumulated as a list and returned to be assembled into nodes.
+     *
+     * After one ludeme has ended, it will parse on, until it reaches the end of string contents.
+     *
+     * For a visualization of the described process, please visit:
+     * https://github.com/frehburg/LudiiRecs/blob/main/src/main/resources/pictures/Parsing/parsing_abstract_machine.png
+     * @param contents
+     * @return
+     */
     public static ArrayList<Tuple<String,ArrayList<String>, LudemeType>> splitIntoSubLudemes(String contents) {
         int i = 0;
         int previous = i;
-        ArrayList<Tuple<String,ArrayList<String>, LudemeType>> list = new ArrayList<>();
+        ArrayList<Tuple<String,ArrayList<String>, LudemeType>> tupleArrayList = new ArrayList<>();
         int l = contents.length();
+        //do while to accommodate ludemes of length 1
         do {
             ArrayList<String> subludemes = new ArrayList<>();
             LudemeType foundType = preClassify(contents.charAt(previous));
@@ -94,11 +182,16 @@ public class Parser {
 
             //add all
             Tuple<String, ArrayList<String>, LudemeType> t = new Tuple(keyword,subludemes, foundType);
-            list.add(t);
+            tupleArrayList.add(t);
         }while(i < l - 1);
-        return list;
+        return tupleArrayList;
     }
 
+    /**
+     * TODO write comment
+     * @param contents
+     * @return
+     */
     private static ArrayList<String> findItemsAtEqualLevel(String contents) {
         ArrayList<String> list = new ArrayList<>();
         int level = 0;
@@ -121,6 +214,13 @@ public class Parser {
         return list;
     }
 
+    /**
+     * TODO write comment
+     * @param contents
+     * @param searched
+     * @param posOfFirst
+     * @return
+     */
     private static int findAtSameLevel(String contents, char searched, int posOfFirst) {
         char first = contents.charAt(posOfFirst);
         int level = 0;
@@ -155,10 +255,14 @@ public class Parser {
      * - PRE_LOWERCASE
      * - PRE_DEFINE_PARAMETER
      * - PRE_NUMBER
+     *
+     * this end can be signaled by either a ' ', indicating another ludeme is following, or by the closing sign of a
+     * ludeme (')') or collection('}').
      * @param contents
      * @return
      */
     private static int findEndOfWord(String contents) {
+        //goes through contents until a signal of the word/ ludeme ending is found
         for(int i = 0; i < contents.length(); i++) {
             char cur = contents.charAt(i);
             if(cur == ' ' || cur == ')' || cur == '}') //these can be around all of the types
@@ -167,6 +271,13 @@ public class Parser {
         return contents.length();
     }
 
+    /**
+     * Classifies the ludeme into one of 8 pretypes, which requires only the first character. The classes are designed in
+     * a way as to cover all possible ludemes. Later they can be specified into final classifications.
+     *
+     * @param first
+     * @return
+     */
     public static LudemeType preClassify(char first) {
         switch(first) {
             case '(': return LudemeType.PRE_LUDEME;
@@ -264,6 +375,12 @@ public class Parser {
         */
     }
 
+    /**
+     * TODO write comment
+     * @param pre
+     * @param ludeme
+     * @return
+     */
     public static LudemeType reClassify(LudemeType pre, String ludeme) {
         switch(pre) {
             case PRE_LUDEME:

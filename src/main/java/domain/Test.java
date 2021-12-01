@@ -21,7 +21,7 @@ public class Test {
 
                 iTree tree = Parser.getTree(contents);
                 new EditorFrame(tree);
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
            }
         }
