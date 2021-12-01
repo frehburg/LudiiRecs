@@ -10,18 +10,18 @@ For more information about the above mentioned projects, please follow these lin
 - [European Research Council](https://erc.europa.eu/news/erc-2017-consolidator-grants-results) 
 - [DKE Honours Programme](https://www.maastrichtuniversity.nl/research/dke/honours-programme) 
 
-[![Digital Ludeme Project](https://github.com/frehburg/LudiiRecs/blob/main/res/pictures/README/Digital%20Ludeme%20Project%20Logo.png)](http://ludeme.eu/index.html) 
-[![Ludii General Game System](https://github.com/frehburg/LudiiRecs/blob/main/res/pictures/README/Ludii%20General%20Game%20System%20Logo.gif)](https://ludii.games/) 
-[![European Research Council](https://github.com/frehburg/LudiiRecs/blob/main/res/pictures/README/European%20Research%20Council%20logo.png)](https://erc.europa.eu/news/erc-2017-consolidator-grants-results) 
-![European Union Flag](https://github.com/frehburg/LudiiRecs/blob/main/res/pictures/README/EU%20flag.png)
-[![DKE Honours Programme](https://github.com/frehburg/LudiiRecs/blob/main/res/pictures/README/UM%20Logo.jpg)](https://www.maastrichtuniversity.nl/research/dke/honours-programme)
+[![Digital Ludeme Project](https://github.com/frehburg/LudiiRecs/blob/main/src/main/resources/pictures/README/Digital%20Ludeme%20Project%20Logo.png)](http://ludeme.eu/index.html) 
+[![Ludii General Game System](https://github.com/frehburg/LudiiRecs/blob/main/src/main/resources/pictures/README/Ludii%20General%20Game%20System%20Logo.gif)](https://ludii.games/) 
+[![European Research Council](https://github.com/frehburg/LudiiRecs/blob/main/src/main/resources/pictures/README/European%20Research%20Council%20logo.png)](https://erc.europa.eu/news/erc-2017-consolidator-grants-results) 
+![European Union Flag](https://github.com/frehburg/LudiiRecs/blob/main/src/main/resources/pictures/README/EU%20flag.png)
+[![DKE Honours Programme](https://github.com/frehburg/LudiiRecs/blob/main/src/main/resources/pictures/README/UM%20Logo.jpg)](https://www.maastrichtuniversity.nl/research/dke/honours-programme)
 
 ## Features
 - Parser of the Ludii language: Builds tree objects from .lud files that represent the structure of the game file
 - Algorithm to gather all .lud files
 - Example: Graph resulting from parsing [Tic-Tac-Toe.lud](https://github.com/frehburg/LudiiRecs/blob/main/res/Tic-Tac-Toe.lud), metadata is also getting parsed but not visualized in this example.
 
-![Example Graph](https://github.com/frehburg/LudiiRecs/blob/main/res/pictures/Example/Tic-Tac-Toe%20graph%20example.png)
+![Example Graph](https://github.com/frehburg/LudiiRecs/blob/main/src/main/resources/pictures/Example/Tic-Tac-Toe%20graph%20example%20colored.png)
 
 
 ## Planning
