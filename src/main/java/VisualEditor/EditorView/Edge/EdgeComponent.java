@@ -44,10 +44,11 @@ public class EdgeComponent extends JComponent
 
     public void drawEdge(Graphics2D g2d, Point2D A, Point2D B)
     {
-        System.out.println("Drawing edge: " + A + B);
-        final GeneralPath path = new GeneralPath();
+        // Add offset to the node coordinates
         A = new Point((int)(A.getX())+30, (int)(A.getY()+30));
         B = new Point((int)(B.getX())+30, (int)(B.getY()+30));
+
+        final GeneralPath path = new GeneralPath();
         path.moveTo(A.getX(), A.getY());
         path.curveTo(A.getX()+50.0, A.getY(), B.getX()-50.0, B.getY(), B.getX(), B.getY());
         g2d.draw(path);

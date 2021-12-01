@@ -43,7 +43,7 @@ public class Parser {
     }
 
     public static String[] splitIntoSubLudemes(String contents) {
-        boolean debug = true;
+        boolean debug = false;
 
         //step 1: search for first ')'
         ArrayList<String> subludemes = new ArrayList<>();

@@ -15,14 +15,16 @@ public class EdgeGraphics
     final private double CORD_SCALE = 0.15;
     final private double SIZE_SCALE = 0.7;
 
-    public EdgeGraphics(int x, int y, int size, String label) {
+    public EdgeGraphics(int x, int y, int size, String label)
+    {
         this.x = x;
         this.y = y;
         this.size = size;
 
     }
 
-    public void drawEdge(Graphics2D g2) {
+    public void drawEdge(Graphics2D g2)
+    {
         Shape outer = new Ellipse2D.Double(x, y, size, size);
         g2.fill(outer);
         g2.setColor(outC);
