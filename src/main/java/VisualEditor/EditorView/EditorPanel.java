@@ -2,6 +2,7 @@ package main.java.VisualEditor.EditorView;
 
 import main.java.VisualEditor.EditorView.Edge.Edge;
 import main.java.VisualEditor.EditorView.PrimitiveNode.BasicNodeComponent;
+import main.java.VisualEditor.NodeController.GraphDrawing;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iTree;
 
@@ -23,10 +24,10 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
     private List<List<BasicNodeComponent>> nodeLayerList;
     private HashMap<Integer, BasicNodeComponent> nodeComponentHashMap;
     private List<Edge> edgeList;
-    private static final int XSPACING = 70, YSPACING = 75;
 
     public EditorPanel(iTree<iNode> NodeTree)
     {
+        setPreferredSize(new Dimension(5000, 5000));
         nodeComponentHashMap = new HashMap<>();
         edgeList = new ArrayList<>();
 
@@ -54,7 +55,9 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
             {
                 // add node component to the list of components to be drawn
                 // FIXME: think of better implementation for the node id
+                // creating visual node from iNode
                 BasicNodeComponent nodeComponent = new BasicNodeComponent(n.getKeyword(), n.getId().hashCode());
+                nodeComponent.setParentID(n.getParent().getId().hashCode());
                 nodeComponent.setChildrenIDs(n.getChildren());
                 nodeComponentHashMap.put(n.getId().hashCode(), nodeComponent);
                 layer.add(nodeComponent);
@@ -81,38 +84,36 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
 
     }
 
-    private void addEdges()
-    {
-
-    }
-
     //-------------------------------------------------------------------------
 
     @Override
     public void paint(final Graphics g)
     {
         super.paintComponent(g);
-        for (int yCoordinate = 0; yCoordinate < nodeLayerList.size(); yCoordinate++)
-        {
-            for (int xCoordinate = 0; xCoordinate < nodeLayerList.get(yCoordinate).size(); xCoordinate++)
-            {
-                BasicNodeComponent node = nodeLayerList.get(yCoordinate).get(xCoordinate);
-                node.drawComponents(g, xCoordinate*XSPACING, yCoordinate*YSPACING);
-            }
-        }
 
+        // #############################################
+        // ###### Application of graph drawing algorithm
+        // #############################################
+
+        //GraphDrawing.LayerTreeHeuristics(nodeLayerList);
+        GraphDrawing.LayerTreeBalanced(nodeLayerList);
+
+        // #############################################
+        // ###### Drawing edges
+        // #############################################
         for (Edge edge : edgeList)
         {
             edge.drawEdge((Graphics2D) g);
         }
 
-        //final Graphics2D g2d = (Graphics2D)g;
-        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        //g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        // ##############################################
+        // ###### Drawing nodes
+        // ##############################################
+        for (java.util.Map.Entry<Integer, BasicNodeComponent> integerBasicNodeComponentEntry : nodeComponentHashMap.entrySet()) {
+            BasicNodeComponent node = integerBasicNodeComponentEntry.getValue();
+            node.drawComponents(g);
+        }
 
-        // Clear the view
-        //g2d.setPaint(Color.white);
-        //g2d.fillRect(0, 0, getWidth(), getHeight());
         revalidate();
         repaint();
     }

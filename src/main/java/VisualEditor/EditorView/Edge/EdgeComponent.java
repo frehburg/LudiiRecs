@@ -1,9 +1,13 @@
 package main.java.VisualEditor.EditorView.Edge;
 
+import main.java.VisualEditor.EditorView.VisualUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+
+import static main.java.VisualEditor.EditorView.PrimitiveNode.BasicNodeComponent.NODE_SIZE;
 
 public class EdgeComponent extends JComponent
 {
@@ -45,8 +49,8 @@ public class EdgeComponent extends JComponent
     public void drawEdge(Graphics2D g2d, Point2D A, Point2D B)
     {
         // Add offset to the node coordinates
-        A = new Point((int)(A.getX())+30, (int)(A.getY()+30));
-        B = new Point((int)(B.getX())+30, (int)(B.getY()+30));
+        A = VisualUtils.getPointCentered(A, NODE_SIZE, NODE_SIZE);
+        B = VisualUtils.getPointCentered(B, NODE_SIZE, NODE_SIZE);
 
         final GeneralPath path = new GeneralPath();
         path.moveTo(A.getX(), A.getY());

@@ -12,9 +12,10 @@ import java.util.List;
 public class BasicNodeComponent extends JPanel implements NodeComponent
 {
 
-    private final int size = 60;
+    public static final int NODE_SIZE = 60;
     private final BasicNodeGraphics node;
     private List<Integer> childrenIDs;
+    private int parentID;
     private final int ID;
     private int x;
     private int y;
@@ -24,7 +25,7 @@ public class BasicNodeComponent extends JPanel implements NodeComponent
         this.x = 0;
         this.y = 0;
         this.ID = ID;
-        node = new BasicNodeGraphics(x, y, size, label);
+        node = new BasicNodeGraphics(x, y, NODE_SIZE, label);
     }
 
     public BasicNodeComponent(int x, int y, String label, int ID)
@@ -32,7 +33,7 @@ public class BasicNodeComponent extends JPanel implements NodeComponent
         this.x = x;
         this.y = y;
         this.ID = ID;
-        node = new BasicNodeGraphics(x, y, size, label);
+        node = new BasicNodeGraphics(x, y, NODE_SIZE, label);
 
     }
 
@@ -89,6 +90,22 @@ public class BasicNodeComponent extends JPanel implements NodeComponent
         return childrenIDs;
     }
 
+    public void setParentID(int parentID) {
+        this.parentID = parentID;
+    }
+
+    public int getParentID() {
+        return parentID;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     @Override
     public int getX() {
         return x;
@@ -106,16 +123,16 @@ public class BasicNodeComponent extends JPanel implements NodeComponent
 
     @Override
     public int getHeight() {
-        return size;
+        return NODE_SIZE;
     }
 
     @Override
     public int getWidth() {
-        return size;
+        return NODE_SIZE;
     }
 
     @Override
     public Dimension2D getDimension() {
-        return new Dimension(size, size);
+        return new Dimension(NODE_SIZE, NODE_SIZE);
     }
 }
