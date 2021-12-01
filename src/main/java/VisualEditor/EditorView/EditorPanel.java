@@ -1,5 +1,6 @@
 package main.java.VisualEditor.EditorView;
 
+import main.java.VisualEditor.EditorView.PrimitiveNode.BasicNodeComponent;
 import main.java.VisualEditor.EditorView.PrimitiveNode.CircleNodeComponent;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iRecNode;
@@ -18,7 +19,7 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
 {
 
     private final iTree<iRecNode> NodeTree;
-    private List<List<CircleNodeComponent>> nodeLayerList;
+    private List<List<BasicNodeComponent>> nodeLayerList;
     private static final int XSPACING = 70, YSPACING = 150;
 
     public EditorPanel(iTree<iRecNode> NodeTree)
@@ -38,7 +39,7 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
     private void addVisualNodes()
     {
         List<List<iNode>> nodes = NodeTree.layerTraversal();
-        List<CircleNodeComponent> layer;
+        List<BasicNodeComponent> layer;
 
         for (List<iNode> l : nodes)
         {

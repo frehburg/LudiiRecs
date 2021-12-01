@@ -35,8 +35,12 @@ public class FileUtils {
                 content = content + l;
             }
         }
-        String s = ")(";
-        content.replaceAll(s, ") (");
+        int index = content.indexOf(")(");
+        while (index >= 0) {
+            System.out.println(index);
+            index = content.indexOf(content, index + 1);
+            System.out.println(content.substring(index, index + 2));
+        }
         return content;
     }
 }
