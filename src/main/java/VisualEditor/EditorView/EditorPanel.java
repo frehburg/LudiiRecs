@@ -95,8 +95,8 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
         // ###### Application of graph drawing algorithm
         // #############################################
 
-        //GraphDrawing.LayerTreeHeuristics(nodeLayerList);
-        GraphDrawing.LayerTreeBalanced(nodeLayerList);
+        GraphDrawing.LayerTreeHeuristics(nodeLayerList);
+        //GraphDrawing.LayerTreeBalanced(nodeLayerList);
 
         // #############################################
         // ###### Drawing edges
