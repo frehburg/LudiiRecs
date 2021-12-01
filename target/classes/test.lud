@@ -1,0 +1,3 @@
+(game "Tic-Tac-Toe"  
+    (players 2) 
+)
