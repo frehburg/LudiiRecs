@@ -33,7 +33,7 @@ public class Parser {
         LudemeType type = preClassify(first);
         n.setLudemeType(type);
         // Go through the ludeme
-        String[] subLudemes = splitIntoSubLudemes(ludeme);
+        String[] subLudemes = splitIntoSubLudemes(ludeme.substring(1));
         for(String s : subLudemes) {
             RecNode c = (RecNode) n.addChild(s);
             recursiveParse(c);
@@ -51,9 +51,9 @@ public class Parser {
         int start = 0;
         int end = -1;
         int nestingLevel = -1, startNestingLevel = 0;
-        boolean foundFirst = false;
+        boolean foundFirst = true;
         boolean foundSecond = false;
-        LudemeType foundType = preClassify(contents.charAt(0)); // because the brackets are removed around the ludeme: (game ...) -> game ..., so needs to be keyword, so we look for " "
+        LudemeType foundType = preClassify(contents.charAt(0));
         while(i < contents.length()) {
             char cur = contents.charAt(i);
             //need to find fist space
