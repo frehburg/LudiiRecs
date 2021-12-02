@@ -12,7 +12,7 @@ import java.util.Scanner;
  * This class is supposed to find all .lud files in the given directory and write their locations to a
  * .txt file located at src/main/resources/locations.txt.
  */
-public class AllGameFiles {
+public class ReadAllGameFiles {
     /**
      * This method can be used to
      * - test the methods below for functionality,
