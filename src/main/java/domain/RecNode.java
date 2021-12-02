@@ -15,8 +15,8 @@ public class RecNode implements iRecNode {
     public static final iRecNode SUPER_NODE = new RecNode(null, new ArrayList<iRecNode>(), "SUPER_NODE", NodeType.SUPER);
 
     //iNode
-    private iRecNode parent;
-    private ArrayList<iRecNode> children;
+    private final iRecNode parent;
+    private final ArrayList<iRecNode> children;
     private String keyword;
     private NodeType nodeType;
     private final int ID;
@@ -26,7 +26,7 @@ public class RecNode implements iRecNode {
     private  LudemeType type;
 
     private String implementation;
-    private List<String> constructors;
+    private final List<String> constructors;
 
     public RecNode(String keyword) {
         //iNode
@@ -248,9 +248,7 @@ public class RecNode implements iRecNode {
     public boolean equals(Object o) {
         if(o instanceof iNode) {
             iNode node = (iNode) o;
-            if(this.getId().equals(node.getId())) {
-                return true;
-            }
+            return this.getId().equals(node.getId());
         }
         return false;
     }
@@ -296,7 +294,7 @@ public class RecNode implements iRecNode {
     @Override
     public ArrayList<Double> getWeights() {
         ArrayList<Double> weights = new ArrayList<>();
-        double dSum = (double) occurrenceFrequency;
+        double dSum = occurrenceFrequency;
         for(iRecNode rn : children) {
             double w = ((double)rn.getOccurenceFrequency())/(dSum);
         }

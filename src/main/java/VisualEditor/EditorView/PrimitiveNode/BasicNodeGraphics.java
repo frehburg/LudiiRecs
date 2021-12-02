@@ -7,10 +7,10 @@ import java.awt.geom.Rectangle2D;
 public class BasicNodeGraphics
 {
 
-    private int x;
-    private int y;
-    private int size;
-    private String label;
+    private final int x;
+    private final int y;
+    private final int size;
+    private final String label;
 
     private Color outC = Color.gray;
     private Color inC = Color.red;

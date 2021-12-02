@@ -12,14 +12,11 @@ import java.util.ArrayList;
 
 public class Test {
     public static void main(String[] args) {
-        String fileName = "src/main/resources/testAll.lud";
-        File f = new File(fileName);
-        String contents;
+        String fileName = "src/main/resources/test.lud";
         if(FileUtils.isFileDotLud(fileName)) {
             try {
-               contents = FileUtils.getContents(f);
 
-                iTree tree = Parser.getTree(contents);
+                iTree tree = Parser.getTree(fileName);
                 new EditorFrame(tree);
             } catch (Exception e) {
                 e.printStackTrace();

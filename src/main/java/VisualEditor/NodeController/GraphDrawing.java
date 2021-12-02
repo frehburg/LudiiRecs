@@ -33,7 +33,7 @@ public class GraphDrawing
             {
                 BasicNodeComponent node = nodeLayerList.get(Y).get(X);
                 node.setX((int)(NODE_SIZE*X*1.5));
-                node.setY((int)((nodeLayerList.size() - Y)*NODE_SIZE));
+                node.setY((nodeLayerList.size() - Y)*NODE_SIZE);
             }
         }
     }

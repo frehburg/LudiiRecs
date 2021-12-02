@@ -12,8 +12,9 @@ import static main.java.VisualEditor.EditorView.PrimitiveNode.BasicNodeComponent
 public class EdgeComponent extends JComponent
 {
 
-    private Point2D A, B;
-    private String label;
+    private final Point2D A;
+    private final Point2D B;
+    private final String label;
 
     public EdgeComponent(Point2D A, Point2D B)
     {

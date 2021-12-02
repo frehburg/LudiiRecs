@@ -35,6 +35,7 @@ public class Parser {
     public static iTree getTree(String fileLocation) throws Exception {
         File f = new File(fileLocation);
         String gameDescription;
+        System.out.println(fileLocation + " " + FileUtils.isFileDotLud(fileLocation));
         if(FileUtils.isFileDotLud(fileLocation)) {
             gameDescription = FileUtils.getContents(f); //read in and preprocessing
             iTree t = parse(gameDescription); //parsing

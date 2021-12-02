@@ -7,15 +7,13 @@ public enum NodeType {
     LEAF(2),
     SUPER(Integer.MAX_VALUE);
 
-    private int id;
+    private final int id;
 
     NodeType(int id){
         this.id = id;
     }
 
     public boolean equals(NodeType nodeType) {
-        if(this.id == nodeType.id)
-            return true;
-        return false;
+        return this.id == nodeType.id;
     }
 }

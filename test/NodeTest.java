@@ -100,7 +100,7 @@ public class NodeTest {
         Assert.assertEquals(false, singleNode.equals(clone));
         Assert.assertEquals(singleNode.getKeyword(), clone.getKeyword());
         Assert.assertEquals(true, singleNode.getParent().equals(clone.getParent()));
-        System.out.println(clone.toString());
+        System.out.println(clone);
         System.out.println(singleNode.toString());
         Assert.assertEquals(singleNode.getChildren(), clone.getChildren());
         Assert.assertEquals(singleNode.getNodeType(), clone.getNodeType());

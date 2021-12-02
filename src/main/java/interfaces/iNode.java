@@ -75,7 +75,7 @@ public interface iNode {
      * @param node
      * @return
      */
-    public boolean isNull(iNode node);
+    boolean isNull(iNode node);
 
     /**
      * Returns an exact copy of this node. Note that a clone is never equal to the original node, becuase they have

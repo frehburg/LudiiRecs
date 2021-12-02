@@ -21,9 +21,9 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
 {
 
     private final iTree<iNode> NodeTree;
-    private List<List<BasicNodeComponent>> nodeLayerList;
-    private HashMap<Integer, BasicNodeComponent> nodeComponentHashMap;
-    private List<Edge> edgeList;
+    private final List<List<BasicNodeComponent>> nodeLayerList;
+    private final HashMap<Integer, BasicNodeComponent> nodeComponentHashMap;
+    private final List<Edge> edgeList;
 
     public EditorPanel(iTree<iNode> NodeTree)
     {

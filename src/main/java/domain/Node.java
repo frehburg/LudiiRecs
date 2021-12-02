@@ -17,13 +17,13 @@ public class Node implements iNode {
      */
     public static final iNode SUPER_NODE = new Node(null, new ArrayList<iNode>(), "SUPER_NODE", NodeType.SUPER);
 
-    private iNode parent;
-    private ArrayList<iNode> children;
+    private final iNode parent;
+    private final ArrayList<iNode> children;
     private String keyword;
     private NodeType nodeType;
     private final int id;
-    private String implementation;
-    private ArrayList<String> constructors;
+    private final String implementation;
+    private final ArrayList<String> constructors;
 
     public Node(String keyword) {
         this.parent = SUPER_NODE;
@@ -229,9 +229,7 @@ public class Node implements iNode {
     public boolean equals(Object o) {
         if(o instanceof iNode) {
             iNode node = (iNode) o;
-            if(this.getId().equals(node.getId())) {
-                return true;
-            }
+            return this.getId().equals(node.getId());
         }
         return false;
     }
