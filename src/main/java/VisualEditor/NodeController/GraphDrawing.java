@@ -1,11 +1,15 @@
 package main.java.VisualEditor.NodeController;
 
-import main.java.VisualEditor.EditorView.PrimitiveNode.BasicNodeComponent;
+import main.java.VisualEditor.EditorView.Node.BasicNodeComponent;
 
 import java.util.List;
 
-import static main.java.VisualEditor.EditorView.PrimitiveNode.BasicNodeComponent.NODE_SIZE;
+import static main.java.VisualEditor.EditorView.Node.BasicNodeComponent.NODE_SIZE;
 
+/**
+ * Class provides methods for positioning node layout in the editor panel
+ * @author nic0gin
+ */
 public class GraphDrawing
 {
     private static final float LAYER_TREE_SPACING_FACTOR = 1.5f;
@@ -37,4 +41,8 @@ public class GraphDrawing
             }
         }
     }
+
+    //TODO: generate adjacency matrix from the edge list
+
+    //TODO: perform operations on nodes (get/set position, get neighbours) using ids in adjacency matrix
 }

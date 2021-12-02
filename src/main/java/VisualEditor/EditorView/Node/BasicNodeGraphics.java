@@ -1,9 +1,13 @@
-package main.java.VisualEditor.EditorView.PrimitiveNode;
+package main.java.VisualEditor.EditorView.Node;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * Graphics of the basic node
+ * @author nic0gin
+ */
 public class BasicNodeGraphics
 {
 

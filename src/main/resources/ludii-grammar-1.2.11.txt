@@ -1,14 +1,13 @@
 //------------------------------------------------------------------------------
 // game
 
-<game>     ::= (game <string>) | 
-               (game <string> <players> [<mode>] <equipment> <rules.rules>) | 
-               <match>
+<game>     ::= (game <string> <players> [<mode>] <equipment> <rules.rules>) | 
+               (game <string>) | <match>
 
 //------------------------------------------------------------------------------
 // game.players
 
-<players>  ::= (players <int>) | (players {<players.player>})
+<players>  ::= (players {<players.player>}) | (players <int>)
 <players.player> ::= (player <directionFacing>)
 
 //------------------------------------------------------------------------------
@@ -57,8 +56,8 @@
                <select> | <effect.set.set> | <shoot> | <slide> | <sow> | 
                <effect.step> | <surround> | <swap.swap> | <take> | <trigger> | 
                <vote> | <while>
-<apply>    ::= (apply if:<boolean>) | (apply <nonDecision>) | 
-               (apply if:<boolean> <nonDecision>)
+<apply>    ::= (apply if:<boolean> <nonDecision>) | (apply <nonDecision>) | 
+               (apply if:<boolean>)
 <attract>  ::= (attract [<moves.from>] [<absoluteDirection>] [<then>])
 <bet>      ::= (bet (<moves.player> | <roleType>) <range> [<then>])
 <claim>    ::= (claim [<moves.piece>] <moves.to> [<then>])
@@ -84,7 +83,7 @@
                <roleType>] [<then>])
 <propose>  ::= (propose (<string> | {<string>}) [<then>])
 <push>     ::= (push [<moves.from>] <direction> [<then>])
-<random>   ::= (random {<float>} {<moves>}) | (random <moves> num:<int>)
+<random>   ::= (random <moves> num:<int>) | (random {<float>} {<moves>})
 <roll>     ::= (roll [<then>])
 <satisfy>  ::= (satisfy (<boolean> | {<boolean>}))
 <select>   ::= (select <moves.from> [<moves.to>] [<then>])
@@ -119,11 +118,11 @@
 <decision> ::= <move>
 <move>     ::= (move Slide [<moves.from>] [<string>] [<direction>] [<moves.between>] [<moves.to>] [stack:<boolean>] [<then>]) 
                | 
-               (move Step [<moves.from>] [<direction>] <moves.to> [stack:<boolean>] [<then>]) 
-               | 
                (move Shoot <moves.piece> [<moves.from>] [<absoluteDirection>] [<moves.between>] [<moves.to>] [<then>]) 
                | (move Select <moves.from> [<moves.to>] [<then>]) | 
                (move <moveMessageType> (<string> | {<string>}) [<then>]) | 
+               (move Promote [<siteType>] [<int>] <moves.piece> [<moves.player> 
+               | <roleType>] [<then>]) | 
                (move Swap Pieces [<int>] [<int>] [<then>]) | 
                (move Remove [<siteType>] (<int> | 
                <sites>) [level:<int>] [at:<whenType>] [count:<int>] [<then>]) | 
@@ -132,17 +131,18 @@
                (move Set NextPlayer (<moves.player> | <ints>) [<then>]) | 
                (move Set Rotation [<moves.to>] [{<int>} | 
                <int>] [previous:<boolean>] [next:<boolean>] [<then>]) | 
-               (move <moves.from> <moves.to> [count:<int>] [copy:<boolean>] [stack:<boolean>] [<roleType>] [<then>]) 
-               | (move Bet (<moves.player> | <roleType>) <range> [<then>]) | 
-               (move <moveSiteType> [<moves.piece>] <moves.to> [count:<int>] [stack:<boolean>] [<then>]) 
+               (move Step [<moves.from>] [<direction>] <moves.to> [stack:<boolean>] [<then>]) 
                | 
                (move Swap Players (<int> <roleType>) (<int> <roleType>) [<then>]) 
                | 
-               (move Promote [<siteType>] [<int>] <moves.piece> [<moves.player> 
-               | <roleType>] [<then>]) | (move <moveSimpleType> [<then>]) | 
+               (move <moveSiteType> [<moves.piece>] <moves.to> [count:<int>] [stack:<boolean>] [<then>]) 
+               | (move Bet (<moves.player> | <roleType>) <range> [<then>]) | 
+               (move <moveSimpleType> [<then>]) | 
                (move Leap [<moves.from>] {{<stepType>}} [forward:<boolean>] [rotations:<boolean>] <moves.to> [<then>]) 
                | 
-               (move Hop [<moves.from>] [<direction>] [<moves.between>] <moves.to> [stack:<boolean>] [<then>])
+               (move Hop [<moves.from>] [<direction>] [<moves.between>] <moves.to> [stack:<boolean>] [<then>]) 
+               | 
+               (move <moves.from> <moves.to> [count:<int>] [copy:<boolean>] [stack:<boolean>] [<roleType>] [<then>])
 <moveMessageType> ::= Propose | Vote
 <moveSimpleType> ::= Pass | PlayCard
 <moveSiteType> ::= Add | Claim
@@ -153,8 +153,8 @@
 <avoidStoredState> ::= (avoidStoredState <moves> [<then>])
 <do>       ::= (do <moves> [next:<moves>] [ifAfterwards:<boolean>] [<then>])
 <firstMoveOnTrack> ::= (firstMoveOnTrack [<string>] [<roleType>] <moves> [<then>])
-<priority> ::= (priority {<moves>} [<then>]) | 
-               (priority <moves> <moves> [<then>])
+<priority> ::= (priority <moves> <moves> [<then>]) | 
+               (priority {<moves>} [<then>])
 <while>    ::= (while <boolean> <moves> [<then>])
 
 //------------------------------------------------------------------------------
@@ -167,21 +167,21 @@
 //------------------------------------------------------------------------------
 // game.rules.play.moves.nonDecision.effect.set
 
-<effect.set.set> ::= (set <setPlayerType> (<moves.player> | 
+<effect.set.set> ::= (set Pending [<int> | <sites>] [<then>]) | 
+               (set <setPlayerType> (<moves.player> | 
                <roleType>) <int> [<then>]) | 
-               (set Rotation [<moves.to>] [{<int>} | 
-               <int>] [previous:<boolean>] [next:<boolean>] [<then>]) | 
-               (set Pending [<int> | <sites>] [<then>]) | 
-               (set NextPlayer (<moves.player> | <ints>) [<then>]) | 
-               (set TrumpSuit (<int> | <intArray.math.difference>) [<then>]) | 
+               (set Var [<string>] [<int>] [<then>]) | 
                (set Hidden [<hiddenData> | 
                {<hiddenData>}] [<siteType>] (at:<int> | 
                <sites>) [level:<int>] [<boolean>] (to:<moves.player> | 
-               to:<roleType>) [<then>]) | 
+               to:<roleType>) [<then>]) | (set TrumpSuit (<int> | 
+               <intArray.math.difference>) [<then>]) | 
+               (set NextPlayer (<moves.player> | <ints>) [<then>]) | 
+               (set Rotation [<moves.to>] [{<int>} | 
+               <int>] [previous:<boolean>] [next:<boolean>] [<then>]) | 
                (set Team <int> {<roleType>} [<then>]) | 
                (set <setSiteType> [<siteType>] at:<int> [level:<int>] <int> [<then>]) 
-               | (set <setValueType> [<int>] [<then>]) | 
-               (set Var [<string>] [<int>] [<then>])
+               | (set <setValueType> [<int>] [<then>])
 <setPlayerType> ::= Score | Value
 <setSiteType> ::= Count | State | Value
 <setValueType> ::= Counter | Pot
@@ -189,8 +189,8 @@
 //------------------------------------------------------------------------------
 // game.rules.play.moves.nonDecision.effect.state
 
-<addScore> ::= (addScore ({<int>} | {<roleType>}) {<int>} [<then>]) | 
-               (addScore (<moves.player> | <roleType>) <int> [<then>])
+<addScore> ::= (addScore (<moves.player> | <roleType>) <int> [<then>]) | 
+               (addScore ({<int>} | {<roleType>}) {<int>} [<then>])
 <moveAgain> ::= (moveAgain [<then>])
 
 //------------------------------------------------------------------------------
@@ -229,20 +229,21 @@
 
 <allCombinations> ::= (allCombinations <moves> <moves> [<then>])
 <append>   ::= (append <nonDecision> [<then>])
-<logical.and> ::= (and <moves> <moves> [<then>]) | (and {<moves>} [<then>])
+<logical.and> ::= (and {<moves>} [<then>]) | (and <moves> <moves> [<then>])
 <logical.if> ::= (if <boolean> <moves> [<moves>] [<then>])
-<logical.or> ::= (or <moves> <moves> [<then>]) | (or {<moves>} [<then>])
+<logical.or> ::= (or {<moves>} [<then>]) | (or <moves> <moves> [<then>])
 
 //------------------------------------------------------------------------------
 // game.rules.play.moves.nonDecision.operators.foreach
 
-<operators.foreach.forEach> ::= (forEach Value min:<int> max:<int> <moves> [<then>]) 
-               | (forEach Value <ints> <moves> [<then>]) | 
+<operators.foreach.forEach> ::= (forEach Value <ints> <moves> [<then>]) | 
                (forEach Site <sites> <moves> [noMoveYet:<moves>] [<then>]) | 
+               (forEach Value min:<int> max:<int> <moves> [<then>]) | 
+               (forEach Team <moves> [<then>]) | 
                (forEach Group [<siteType>] [<direction>] [if:<boolean>] <moves> [<then>]) 
                | 
                (forEach Die [<int>] [combined:<boolean>] [replayDouble:<boolean>] [if:<boolean>] <moves> [<then>]) 
-               | (forEach Team <moves> [<then>]) | 
+               | 
                (forEach Direction [<moves.from>] [<direction>] [<moves.between>] (<moves.to> 
                | <moves>) [<then>]) | 
                (forEach Level [<siteType>] <int> [<stackDirection>] <moves> [<then>]) 
@@ -342,15 +343,15 @@
 <forEach.forEach> ::= (forEach <ints> <startRule>) | 
                (forEach Player <startRule>) | 
                (forEach Value min:<int> max:<int> <startRule>) | 
-               (forEach Site <sites> [if:<boolean>] <startRule>) | 
-               (forEach Team <startRule>)
+               (forEach Team <startRule>) | 
+               (forEach Site <sites> [if:<boolean>] <startRule>)
 
 //------------------------------------------------------------------------------
 // game.rules.start.place
 
-<place>    ::= (place Random [<sites>] {<string>} [count:<int>] [state:<int>] [value:<int>] [<siteType>]) 
+<place>    ::= (place Random {<string>} [count:{<int>}] [state:<int>] [value:<int>] <int> [<siteType>]) 
                | 
-               (place Random {<string>} [count:{<int>}] [state:<int>] [value:<int>] <int> [<siteType>]) 
+               (place Random [<sites>] {<string>} [count:<int>] [state:<int>] [value:<int>] [<siteType>]) 
                | (place Stack (<string> | 
                items:{<string>}) [<string>] [<siteType>] [<int> | {<int>} | 
                <sites> | coord:<string> | {<string>}] [count:<int> | 
@@ -362,16 +363,17 @@
 //------------------------------------------------------------------------------
 // game.rules.start.set
 
-<start.set.set> ::= (set <roleType> [<siteType>] [{<int>}] [<sites>] [{<string>}]) 
-               | (set <setStartSitesType> <int> [<siteType>] (at:<int> | 
+<start.set.set> ::= (set <setStartPlayerType> [<roleType>] <int>) | 
+               (set <setStartSitesType> <int> [<siteType>] (at:<int> | 
                to:<sites>)) | 
+               (set <roleType> [<siteType>] [{<int>}] [<sites>] [{<string>}]) | 
                (set <roleType> [<siteType>] [<int>] [coord:<string>]) | 
                (set Hidden [<hiddenData> | 
                {<hiddenData>}] [<siteType>] (at:<int> | 
                <sites>) [level:<int>] [<boolean>] to:<roleType>) | 
+               (set Team <int> {<roleType>}) | 
                (set RememberValue [<string>] (<int> | 
-               <sites>) [unique:<boolean>]) | (set Team <int> {<roleType>}) | 
-               (set <setStartPlayerType> [<roleType>] <int>)
+               <sites>) [unique:<boolean>])
 <setStartPlayerType> ::= Amount | Score
 <setStartSitesType> ::= Cost | Count | Phase
 
@@ -433,8 +435,8 @@
 //------------------------------------------------------------------------------
 // game.functions.booleans.is
 
-<booleans.is.is> ::= (is Triggered <string> (<int> | <roleType>)) | 
-               (is <isSimpleType>) | (is Crossing <int> <int>) | 
+<booleans.is.is> ::= (is Crossing <int> <int>) | (is <isSimpleType>) | 
+               (is Triggered <string> (<int> | <roleType>)) | 
                (is <isStringType> <string>) | (is <isGraphType> <siteType>) | 
                (is <isIntegerType> [<int>]) | 
                (is Hidden [<hiddenData>] [<siteType>] at:<int> [level:<int>] (to:<moves.player> 
@@ -458,10 +460,9 @@
                (is Line [<siteType>] <int> [<absoluteDirection>] [through:<int> 
                | throughAny:<sites>] [<roleType> | what:<int> | 
                whats:{<int>}] [exact:<boolean>] [contiguous:<boolean>] [if:<boolean>] [byLevel:<boolean>]) 
-               | 
+               | (is Target [<int> | <string>] {<int>} [<int> | {<int>}]) | 
                (is <isConnectType> [<int>] [<siteType>] [at:<int>] [<direction>] ({<sites>} 
-               | <roleType> | <regionTypeStatic>)) | (is Target [<int> | 
-               <string>] {<int>} [<int> | {<int>}])
+               | <roleType> | <regionTypeStatic>))
 <isComponentType> ::= Threatened | Within
 <isConnectType> ::= Blocked | Connected
 <isGraphType> ::= LastFrom | LastTo
@@ -475,8 +476,9 @@
 //------------------------------------------------------------------------------
 // game.functions.booleans.deductionPuzzle.is
 
-<deductionPuzzle.is.is> ::= (is <isPuzzleRegionResultType> [<siteType>] [<sites>] [of:<int>] [<string>] <int>) 
-               | (is Unique [<siteType>]) | (is Solved)
+<deductionPuzzle.is.is> ::= (is Unique [<siteType>]) | 
+               (is <isPuzzleRegionResultType> [<siteType>] [<sites>] [of:<int>] [<string>] <int>) 
+               | (is Solved)
 <isPuzzleRegionResultType> ::= Count | Sum
 
 //------------------------------------------------------------------------------
@@ -498,9 +500,10 @@
 //------------------------------------------------------------------------------
 // game.functions.booleans.all
 
-<booleans.all.all> ::= (all <allSitesType> <sites> if:<boolean>) | 
-               (all <allSimpleType>) | (all Values <ints> if:<boolean>) | 
-               (all Groups [<siteType>] [<direction>] [of:<boolean>] if:<boolean>)
+<booleans.all.all> ::= (all <allSimpleType>) | 
+               (all <allSitesType> <sites> if:<boolean>) | 
+               (all Groups [<siteType>] [<direction>] [of:<boolean>] if:<boolean>) 
+               | (all Values <ints> if:<boolean>)
 <allSimpleType> ::= DiceEqual | DiceUsed | Passed
 <allSitesType> ::= Different | Sites
 
@@ -508,8 +511,8 @@
 // game.functions.ints.value
 
 <value>    ::= (value) | (value Piece [<siteType>] at:<int> [level:<int>]) | 
-               (value Player (<int> | <roleType>)) | (value Pending) | 
-               (value Random <range>)
+               (value Player (<int> | <roleType>)) | (value Random <range>) | 
+               (value Pending)
 
 //------------------------------------------------------------------------------
 // game.functions.ints.trackSite
@@ -551,22 +554,22 @@
 <size>     ::= (size Territory [<siteType>] (<roleType> | 
                <moves.player>) [<absoluteDirection>]) | 
                (size Group [<siteType>] at:<int> [<direction>] [if:<boolean>]) | (size LargePiece [<siteType>] (in:<sites> 
-               | at:<int>)) | (size Stack [<siteType>] [in:<sites> | 
-               at:<int>]) | (size Array <ints>)
+               | at:<int>)) | (size Array <ints>) | 
+               (size Stack [<siteType>] [in:<sites> | at:<int>])
 
 //------------------------------------------------------------------------------
 // game.functions.ints.math
 
 <%>        ::= (% <int> <int>)
-<ints.math.*> ::= (* ({<int>} | <ints>)) | (* <int> <int>)
+<ints.math.*> ::= (* <int> <int>) | (* ({<int>} | <ints>))
 <ints.math.+> ::= (+ ({<int>} | <ints>)) | (+ <int> <int>)
 <ints.math.-> ::= (- [<int>] <int>)
 <ints.math./> ::= (/ <int> <int>)
 <ints.math.^> ::= (^ <int> <int>)
 <ints.math.abs> ::= (abs <int>)
 <ints.math.if> ::= (if <boolean> <int> <int>)
-<ints.math.max> ::= (max <ints>) | (max <int> <int>)
-<ints.math.min> ::= (min <ints>) | (min <int> <int>)
+<ints.math.max> ::= (max <int> <int>) | (max <ints>)
+<ints.math.min> ::= (min <int> <int>) | (min <ints>)
 
 //------------------------------------------------------------------------------
 // game.functions.ints.match
@@ -601,20 +604,20 @@
 //------------------------------------------------------------------------------
 // game.functions.ints.count
 
-<count.count> ::= (count Groups [<siteType>] [<direction>] [if:<boolean>] [min:<int>]) 
-               | (count <countComponentType> [<siteType>] [<roleType> | 
+<count.count> ::= (count <countComponentType> [<siteType>] [<roleType> | 
                of:<int>] [<string>] [in:<sites>]) | 
-               (count [<countSiteType>] [<siteType>] [in:<sites> | at:<int> | 
-               <string>]) | 
-               (count Stack [<stackDirection>] [<siteType>] (at:<int> | 
+               (count Groups [<siteType>] [<direction>] [if:<boolean>] [min:<int>]) 
+               | 
+               (count Liberties [<siteType>] [at:<int>] [<direction>] [if:<boolean>]) 
+               | (count Stack [<stackDirection>] [<siteType>] (at:<int> | 
                to:<sites>) [if:<boolean>] [stop:<boolean>]) | 
-               (count <countSimpleType> [<siteType>]) | 
+               (count [<countSiteType>] [<siteType>] [in:<sites> | at:<int> | 
+               <string>]) | (count <countSimpleType> [<siteType>]) | 
                (count Value <int> in:<ints>) | 
                (count StepsOnTrack [<roleType> | <moves.player> | 
                <string>] [<int>] [<int>]) | 
                (count Steps [<siteType>] [<relationType>] [<effect.step>] [newRotation:<int>] <int> (<int> 
-               | <sites>)) | 
-               (count Liberties [<siteType>] [at:<int>] [<direction>] [if:<boolean>])
+               | <sites>))
 <countComponentType> ::= Pieces | Pips
 <countSimpleType> ::= Active | Cells | Columns | Edges | Moves | MovesThisTurn | 
                Phases | Players | Rows | Trials | Turns | Vertices
@@ -629,32 +632,36 @@
 //------------------------------------------------------------------------------
 // game.functions.ints.board.where
 
-<where>    ::= (where Level <string> (<int> | 
-               <roleType>) [state:<int>] [<siteType>] at:<int> [fromTop:<boolean>]) 
-               | 
+<where>    ::= (where <int> [<siteType>]) | 
                (where Level <int> [<siteType>] at:<int> [fromTop:<boolean>]) | 
-               (where <int> [<siteType>]) | (where <string> (<int> | 
+               (where Level <string> (<int> | 
+               <roleType>) [state:<int>] [<siteType>] at:<int> [fromTop:<boolean>]) 
+               | (where <string> (<int> | 
                <roleType>) [state:<int>] [<siteType>])
 
 //------------------------------------------------------------------------------
 // game.functions.region.sites
 
-<sites>    ::= (sites <sitesSimpleType> [<siteType>]) | 
-               (sites <sitesEdgeType>) | (sites Group [<siteType>] (at:<int> | 
-               from:<sites>) [<direction>] [if:<boolean>]) | 
+<sites>    ::= (sites [<siteType>] {<string>}) | 
+               (sites <sitesSimpleType> [<siteType>]) | 
+               (sites <sitesEdgeType>) | 
                (sites [<siteType>] [<int>] {{<stepType>}} [rotations:<boolean>]) 
-               | (sites ({<int>} | <ints>)) | (sites <sitesMoveType> <moves>) | 
-               (sites [<siteType>] {<string>}) | 
-               (sites Loop [inside:<boolean>] [<siteType>] [surround:<roleType> 
-               | {<roleType>}] [<direction>] [<int>] [<int> | <sites>]) | 
+               | (sites ({<int>} | <ints>)) | 
+               (sites <sitesIndexType> [<siteType>] [<int>]) | 
+               (sites <sitesMoveType> <moves>) | 
+               (sites Between [<direction>] [<siteType>] from:<int> [fromIncluded:<boolean>] to:<int> [toIncluded:<boolean>] [cond:<boolean>]) 
+               | (sites Hidden [<hiddenData>] [<siteType>] (to:<moves.player> | 
+               to:<roleType>)) | 
                (sites Pattern {<stepType>} [<siteType>] [from:<int>] [what:<int> 
                | whats:{<int>}]) | 
-               (sites Hidden [<hiddenData>] [<siteType>] (to:<moves.player> | 
-               to:<roleType>)) | (sites Crossing at:<int> [<moves.player> | 
-               <roleType>]) | (sites Random [<sites>] [num:<int>]) | 
+               (sites Loop [inside:<boolean>] [<siteType>] [surround:<roleType> 
+               | {<roleType>}] [<direction>] [<int>] [<int> | <sites>]) | 
+               (sites Group [<siteType>] (at:<int> | 
+               from:<sites>) [<direction>] [if:<boolean>]) | 
+               (sites Crossing at:<int> [<moves.player> | <roleType>]) | 
+               (sites Random [<sites>] [num:<int>]) | 
                (sites LargePiece [<siteType>] at:<int>) | 
-               (sites Between [<direction>] [<siteType>] from:<int> [fromIncluded:<boolean>] to:<int> [toIncluded:<boolean>] [cond:<boolean>]) 
-               | (sites Occupied (by:<moves.player> | 
+               (sites Occupied (by:<moves.player> | 
                by:<roleType>) [container:<int> | 
                container:<string>] [component:<int> | component:<string> | 
                components:{<string>}] [top:<boolean>] [on:<siteType>]) | 
@@ -665,19 +672,18 @@
                from:<sites>) [<direction>] [included:<boolean>] [stop:<boolean>] [stopIncluded:<boolean>] [distance:<int>] [<siteType>]) 
                | 
                (sites LineOfSight [<lineOfSightType>] [<siteType>] [at:<int>] [<direction>]) 
-               | (sites) | (sites <sitesIndexType> [<siteType>] [<int>]) | 
-               (sites Side [<siteType>] [<moves.player> | <roleType> | 
-               <compassDirection>]) | 
+               | (sites) | (sites Side [<siteType>] [<moves.player> | 
+               <roleType> | <compassDirection>]) | 
                (sites Distance [<siteType>] [<relationType>] [<effect.step>] [newRotation:<int>] from:<int> <range>) 
-               | (sites Start <moves.piece>) | 
+               | (sites [<moves.player> | 
+               <roleType>] [<siteType>] [<string>]) | 
+               (sites Start <moves.piece>) | 
                (sites <sitesPlayerType> [<siteType>] [<moves.player> | 
                <roleType>] [<nonDecision>] [<string>]) | 
                (sites Track [<moves.player> | 
-               <roleType>] [<string>] [from:<int>] [to:<int>]) | 
-               (sites [<moves.player> | <roleType>] [<siteType>] [<string>]) | 
-               (region) | (region int) | (region) | 
-               (region <equipment.region>) | (region) | (region {int}) | 
-               (region) | 
+               <roleType>] [<string>] [from:<int>] [to:<int>]) | (region) | 
+               (region int) | (region) | (region <equipment.region>) | 
+               (region) | (region {int}) | (region) | 
                (region <string> <container.board.board> {<string>}) | 
                <region.math.difference> | <expand> | <region.foreach.forEach> | 
                <region.math.if> | <region.math.intersection> | 
@@ -711,8 +717,8 @@
 //------------------------------------------------------------------------------
 // game.functions.region.foreach
 
-<region.foreach.forEach> ::= (forEach of:<sites> <sites>) | 
-               (forEach <ints> <sites>) | (forEach <sites> if:<boolean>) | 
+<region.foreach.forEach> ::= (forEach <sites> if:<boolean>) | 
+               (forEach <ints> <sites>) | (forEach of:<sites> <sites>) | 
                (forEach Team <sites>)
 
 //------------------------------------------------------------------------------
@@ -943,6 +949,28 @@
                <dim.math.min>
 
 //------------------------------------------------------------------------------
+// game.functions.booleans
+
+<boolean>  ::= <!=> | <<> | <<=> | <=> | <>> | <>=> | <booleans.all.all> | 
+               <deductionPuzzle.all.all> | <math.and> | boolean | <can> | 
+               <forAll> | <booleans.math.if> | <deductionPuzzle.is.is> | 
+               <booleans.is.is> | <booleans.no.no> | <not> | <math.or> | 
+               <toBool> | <was> | <xor>
+<toBool>   ::= (toBool (<int> | <float>))
+
+//------------------------------------------------------------------------------
+// game.functions.directions
+
+<directions> ::= (directions <siteType> from:<int> to:<int>) | 
+               (directions [<relativeDirection> | 
+               {<relativeDirection>}] [of:<relationType>] [bySite:<boolean>]) | 
+               (directions Random <direction> num:<int>) | 
+               (directions (<absoluteDirection> | {<absoluteDirection>}))
+<directions.difference> ::= (difference <direction> <direction>)
+<directions.if> ::= (if <boolean> <direction> <direction>)
+<directions.union> ::= (union <direction> <direction>)
+
+//------------------------------------------------------------------------------
 // game.functions.ints
 
 <ints>     ::= {<int>} | <array> | <intArray.math.difference> | 
@@ -969,28 +997,6 @@
 <toInt>    ::= (toInt (<boolean> | <float>))
 
 //------------------------------------------------------------------------------
-// game.functions.booleans
-
-<boolean>  ::= <!=> | <<> | <<=> | <=> | <>> | <>=> | <booleans.all.all> | 
-               <deductionPuzzle.all.all> | <math.and> | boolean | <can> | 
-               <forAll> | <booleans.math.if> | <deductionPuzzle.is.is> | 
-               <booleans.is.is> | <booleans.no.no> | <not> | <math.or> | 
-               <toBool> | <was> | <xor>
-<toBool>   ::= (toBool (<int> | <float>))
-
-//------------------------------------------------------------------------------
-// game.functions.directions
-
-<directions> ::= (directions <siteType> from:<int> to:<int>) | 
-               (directions [<relativeDirection> | 
-               {<relativeDirection>}] [of:<relationType>] [bySite:<boolean>]) | 
-               (directions Random <direction> num:<int>) | 
-               (directions (<absoluteDirection> | {<absoluteDirection>}))
-<directions.difference> ::= (difference <direction> <direction>)
-<directions.if> ::= (if <boolean> <direction> <direction>)
-<directions.union> ::= (union <direction> <direction>)
-
-//------------------------------------------------------------------------------
 // game.util.end
 
 <end.score> ::= (score <roleType> <int>)
@@ -1000,10 +1006,10 @@
 // game.util.math
 
 <math.count> ::= (count <string> <int>)
-<math.pair> ::= (pair <int> <string>) | (pair <string> <string>) | 
-               (pair <string> <roleType>) | (pair <roleType> <landmarkType>) | 
-               (pair <roleType> <string>) | (pair <int> <int>) | 
-               (pair <roleType> <roleType>) | (pair <roleType> <int>)
+<math.pair> ::= (pair <roleType> <landmarkType>) | (pair <roleType> <string>) | 
+               (pair <string> <roleType>) | (pair <int> <int>) | 
+               (pair <roleType> <int>) | (pair <roleType> <roleType>) | 
+               (pair <int> <string>) | (pair <string> <string>)
 
 //------------------------------------------------------------------------------
 // game.util.moves
@@ -1020,15 +1026,15 @@
 //------------------------------------------------------------------------------
 // game.util.graph
 
-<graph>    ::= (graph) | (graph) | (graph <graph>) | 
-               (graph vertices:{{<float>}} [edges:{{<int>}}]) | 
-               <operators.add> | <basis> | <brick> | <celtic> | <clip> | 
-               <complete> | <concentric> | <dual> | <hex> | <hole> | 
-               <intersect> | <keep> | <layers> | <makeFaces> | <merge> | 
-               <quadhex> | <recoordinate> | <regular> | <operators.remove> | 
-               <renumber> | <repeat> | <rotate> | <scale> | <shift> | <skew> | 
-               <spiral> | <splitCrossings> | <square> | <subdivide> | 
-               <tiling> | <tri> | <trim> | <operators.union> | <wedge>
+<graph>    ::= (graph vertices:{{<float>}} [edges:{{<int>}}]) | (graph) | 
+               (graph <graph>) | (graph) | <operators.add> | <basis> | 
+               <brick> | <celtic> | <clip> | <complete> | <concentric> | 
+               <dual> | <hex> | <hole> | <intersect> | <keep> | <layers> | 
+               <makeFaces> | <merge> | <quadhex> | <recoordinate> | <regular> | 
+               <operators.remove> | <renumber> | <repeat> | <rotate> | 
+               <scale> | <shift> | <skew> | <spiral> | <splitCrossings> | 
+               <square> | <subdivide> | <tiling> | <tri> | <trim> | 
+               <operators.union> | <wedge>
 <poly>     ::= (poly {{<float>}}) | (poly {{<dim>}})
 
 //------------------------------------------------------------------------------

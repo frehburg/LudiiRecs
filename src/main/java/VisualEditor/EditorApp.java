@@ -1,6 +1,7 @@
 package main.java.VisualEditor;
 
 import main.java.VisualEditor.EditorView.EditorFrame;
+import main.java.VisualEditor.GrammarModel.SyntaxBase;
 import main.java.domain.Node;
 import main.java.domain.Tree;
 import main.java.interfaces.iNode;
@@ -12,15 +13,12 @@ public class EditorApp
 
     public static void main(String[] args)
     {
-
-        //SyntaxBase base = new SyntaxBase();
-        //base.generateSyntaxBase();
-        //System.out.println(base.toString());
+        SyntaxBase base = new SyntaxBase();
+        base.generateSyntaxBase();
+        System.out.println(base.toString());
 
         // Hard-coding tic-tac-toe tree
         //------------------------------------------------------
-        String s = ")(";
-        System.out.println(")(");
         new EditorFrame(getTestTree());
 
 //        String fileName = "src/main/resources/Tic-Tac-Toe.lud";
@@ -76,7 +74,7 @@ public class EditorApp
         iNode is = if_node.addChild("is");
         is.addChild("Line");
         is.addChild("3");
-        iNode result = end.addChild("result");
+        iNode result = if_node.addChild("result");
         result.addChild("Mover");
         result.addChild("Win");
 

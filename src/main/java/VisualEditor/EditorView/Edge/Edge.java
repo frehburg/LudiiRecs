@@ -1,6 +1,6 @@
 package main.java.VisualEditor.EditorView.Edge;
 
-import main.java.VisualEditor.EditorView.PrimitiveNode.NodeComponent;
+import main.java.VisualEditor.EditorView.Node.VisualNode;
 import main.java.interfaces.iNode;
 
 import java.awt.*;
@@ -10,13 +10,13 @@ import java.util.List;
 
 public class Edge
 {
-    private final NodeComponent from;
-    private final NodeComponent to;
+    private final VisualNode from;
+    private final VisualNode to;
     private final String label;
     private final EdgeComponent edgeComponent;
 
     //TODO: add abstraction
-    public Edge(NodeComponent from,NodeComponent to)
+    public Edge(VisualNode from, VisualNode to)
     {
         this.from = from;
         this.to = to;
@@ -24,7 +24,7 @@ public class Edge
         this.edgeComponent = new EdgeComponent(from.getCoords(), to.getCoords());
     }
 
-    public Edge(NodeComponent from,NodeComponent to, String label)
+    public Edge(VisualNode from, VisualNode to, String label)
     {
         this.from = from;
         this.to = to;
@@ -39,10 +39,10 @@ public class Edge
     public static List<Edge> setParentChildrenEdges(iNode from, List<iNode> to)
     {
         List<Edge> edgeList = new ArrayList<>();
-        Point2D S = ((NodeComponent) from).getCoords();
+        Point2D S = ((VisualNode) from).getCoords();
         for(iNode c : to)
         {
-            edgeList.add(new Edge((NodeComponent) from, (NodeComponent) c));
+            edgeList.add(new Edge((VisualNode) from, (VisualNode) c));
         }
 
         return edgeList;

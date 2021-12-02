@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 
-import static main.java.VisualEditor.EditorView.PrimitiveNode.BasicNodeComponent.NODE_SIZE;
+import static main.java.VisualEditor.EditorView.Node.BasicNodeComponent.NODE_SIZE;
 
 public class EdgeComponent extends JComponent
 {

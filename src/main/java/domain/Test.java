@@ -1,8 +1,6 @@
 package main.java.domain;
 
 import main.java.Utils.FileUtils;
-import main.java.VisualEditor.EditorView.EditorFrame;
-import main.java.interfaces.iTree;
 import main.java.parser.LudemeType;
 import main.java.parser.Parser;
 
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 
 public class Test {
     public static void main(String[] args) {
-        String test  = "src/main/resources/test.lud";
+        String test  = "src/main/resources/Tic-Tac-Toe.lud";
         String fileName = test;
         File f = new File(fileName);
         String contents;

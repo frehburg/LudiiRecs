@@ -1,4 +1,4 @@
-package main.java.VisualEditor.EditorView.PrimitiveNode;
+package main.java.VisualEditor.EditorView.Node;
 
 import main.java.interfaces.iNode;
 
@@ -9,7 +9,11 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BasicNodeComponent extends JPanel implements NodeComponent
+/**
+ * Basic visual node
+ * @author nic0gin
+ */
+public class BasicNodeComponent extends JComponent implements VisualNode
 {
 
     public static final int NODE_SIZE = 60;

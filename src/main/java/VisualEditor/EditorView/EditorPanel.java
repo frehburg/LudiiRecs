@@ -1,7 +1,7 @@
 package main.java.VisualEditor.EditorView;
 
 import main.java.VisualEditor.EditorView.Edge.Edge;
-import main.java.VisualEditor.EditorView.PrimitiveNode.BasicNodeComponent;
+import main.java.VisualEditor.EditorView.Node.BasicNodeComponent;
 import main.java.VisualEditor.NodeController.GraphDrawing;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iTree;
@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-// TODO: add scroll panels
-// FIXME: does not render until screen is resized
+/**
+ * Main panel of the visual editor
+ * @author nic0gin
+ */
 public class EditorPanel extends JPanel implements MouseListener, MouseMotionListener
 {
 
@@ -109,8 +111,9 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
         // ##############################################
         // ###### Drawing nodes
         // ##############################################
-        for (java.util.Map.Entry<Integer, BasicNodeComponent> integerBasicNodeComponentEntry : nodeComponentHashMap.entrySet()) {
-            BasicNodeComponent node = integerBasicNodeComponentEntry.getValue();
+        for (java.util.Map.Entry<Integer, BasicNodeComponent> iBNodeComponentEntry : nodeComponentHashMap.entrySet())
+        {
+            BasicNodeComponent node = iBNodeComponentEntry.getValue();
             node.drawComponents(g);
         }
 
