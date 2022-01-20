@@ -38,12 +38,23 @@ public class Parser {
         System.out.println(fileLocation + " " + FileUtils.isFileDotLud(fileLocation));
         if(FileUtils.isFileDotLud(fileLocation)) {
             gameDescription = FileUtils.getContents(f); //read in and preprocessing
+            gameDescription = preprocessing(gameDescription);
             iTree t = parse(gameDescription); //parsing
             t = postProcessing(t); //postprocessing
             return t;
         } else {
             throw new Exception("The file could not be parsed. Make sure that you only try to parse .lud files!");
         }
+    }
+
+    private static String preprocessing(String gameDescription) {
+        gameDescription = gameDescription.replaceAll("\\*",""); //stars for preferred options are removed
+        gameDescription = gameDescription.replaceAll(":", ": "); //optional argument labes are spaced out
+        gameDescription = gameDescription.replaceAll("  ", " "); //double spaces removed
+        gameDescription = gameDescription.replaceAll("  ", " ");
+        gameDescription = gameDescription.replaceAll("\\\\\"", "'"); //replaces \" with single quotation marks (only for metadata
+        gameDescription = "(root "+ gameDescription + ")"; //does not parse otherwise
+        return gameDescription;
     }
 
     /**
@@ -142,12 +153,17 @@ public class Parser {
      * @return
      */
     public static ArrayList<Tuple<String,ArrayList<String>, LudemeType>> splitIntoSubLudemes(String contents) {
+        if(contents.charAt(contents.length()-1) == ' ')
+            contents = contents.substring(0,contents.length()-1);
+        if(contents == "")
+            return new ArrayList<>();
         int i = 0;
         int previous = i;
         ArrayList<Tuple<String,ArrayList<String>, LudemeType>> tupleArrayList = new ArrayList<>();
         int l = contents.length();
         //do while to accommodate ludemes of length 1
         do {
+            String tmp = contents.substring(i);
             ArrayList<String> subludemes = new ArrayList<>();
             LudemeType foundType = preClassify(contents.charAt(previous));
             String keyword = "";
@@ -163,17 +179,20 @@ public class Parser {
                     break;
                 case PRE_STRING:
                     end = findAtSameLevel(contents,'"', previous);
-                    keyword = contents.substring(previous,end);
+                    keyword = contents.substring(previous,end + 1); // to show closing quotation mark
                     break;
                 case PRE_COLLECTION:
                     end = findAtSameLevel(contents,'}', previous);
                     keyword = "{}";
-                    subludemes = findItemsAtEqualLevel(contents.substring(previous + 1,end - 1));
+                    subludemes = findItemsAtEqualLevel(contents.substring(previous + 1,end));
                     break;
                 case PRE_LUDEME:
                     end = findAtSameLevel(contents,')', previous);
-                    keyword = contents.substring(1,findEndOfWord(contents));
-                    subludemes = findItemsAtEqualLevel(contents.substring(previous + 1,end - 1));
+                    String tmp1 = contents.substring(i);
+                    System.out.println(contents.substring(i));
+                    keyword = contents.substring(i + 1,previous + findEndOfWord(contents.substring(previous)));
+                    keyword = keyword.replaceAll("\\(","");
+                    subludemes = findItemsAtEqualLevel(contents.substring(previous + 1,end));
                     subludemes.remove(0);
                     break;
 
@@ -181,9 +200,11 @@ public class Parser {
             i = end;
             previous = end + 1;
 
-            //add all
-            Tuple<String, ArrayList<String>, LudemeType> t = new Tuple(keyword,subludemes, foundType);
-            tupleArrayList.add(t);
+            //add all, if it is not ERR
+            if(foundType != LudemeType.ERR) {
+                Tuple<String, ArrayList<String>, LudemeType> t = new Tuple(keyword, subludemes, foundType);
+                tupleArrayList.add(t);
+            }
         }while(i < l - 1);
         return tupleArrayList;
     }
@@ -204,8 +225,23 @@ public class Parser {
             if(cur == ')' || cur == '}')
                 level--;
 
+
+
             if(cur == ' ' || i == contents.length() - 1) {
                 if(level == 0) {
+                    list.add(contents.substring(previous, i + 1));
+                    previous = i + 1;
+                }
+            } //if we have a string, then we need to jump ahead, to the closing quotationmark of the string
+            //because there can be spaces in strings and they don´t affect the split
+            else if(level == 0 && cur == '"') {
+                if(i > 0 && contents.charAt(i) == '\\') {
+                    //skip this one, because it is in another string
+                } else {
+                    int delta = findAtSameLevel(contents.substring(i), '"', 0);
+                    i += delta;
+                    cur = contents.charAt(i);
+                    String tmp = contents.substring(previous, i + 1);
                     list.add(contents.substring(previous, i + 1));
                     previous = i + 1;
                 }
@@ -230,12 +266,14 @@ public class Parser {
             if(cur == searched) {
                 if(level == 0) {
                     //had to put this extra case in to identify ranges
-                    if(searched == '"'
+                    if((i+1) < contents.length()
+                            && (i+2) < contents.length()
+                            && searched == '"'
                             && contents.charAt(i+1) == '.'
                             && contents.charAt(i+2) == '.') {
                         i += 3;
                     } else {
-                        return i + 1;
+                        return i;
                     }
                 }
             }
@@ -264,10 +302,19 @@ public class Parser {
      */
     private static int findEndOfWord(String contents) {
         //goes through contents until a signal of the word/ ludeme ending is found
+        int level = 0;
         for(int i = 0; i < contents.length(); i++) {
             char cur = contents.charAt(i);
-            if(cur == ' ' || cur == ')' || cur == '}') //these can be around all of the types
+            if(cur == ' '
+                    || (level == 0 && cur == ')')
+                    || (level == 0 && cur == '}')
+            ) {//these can be around all of the types
                 return i;
+            }
+            if(cur == '(' || cur == '{')
+                level++;
+            if(cur == ')' || cur == '}')
+                level--;
         }
         return contents.length();
     }

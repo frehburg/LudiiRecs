@@ -12,7 +12,8 @@ import java.util.ArrayList;
 
 public class Test {
     public static void main(String[] args) {
-        String fileName = "src/main/resources/test.lud";
+        // for some reason flips out about line 27
+        String fileName = "src/main/resources/Tic-Tac-Toe.lud";
         if(FileUtils.isFileDotLud(fileName)) {
             try {
 

@@ -1,10 +1,12 @@
 package main.java.VisualEditor;
 
 import main.java.VisualEditor.EditorView.EditorFrame;
+import main.java.VisualEditor.EditorView.EditorPanel;
 import main.java.domain.Node;
 import main.java.domain.Tree;
 import main.java.interfaces.iNode;
 import main.java.interfaces.iTree;
+import main.java.parser.Parser;
 
 
 public class EditorApp
@@ -19,7 +21,12 @@ public class EditorApp
 
         // Hard-coding tic-tac-toe tree
         //------------------------------------------------------
-        new EditorFrame(getTestTree());
+        try {
+            new EditorFrame(Parser.getTree("src/main/resources/Ludii/lud/board/war/replacement/checkmate/chess/chess.lud"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //new EditorFrame(getTestTree());
 
 //        String fileName = "src/main/resources/Tic-Tac-Toe.lud";
 //        File f = new File(fileName);

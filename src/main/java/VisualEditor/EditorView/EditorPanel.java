@@ -25,7 +25,7 @@ public class EditorPanel extends JPanel implements MouseListener, MouseMotionLis
     private final HashMap<Integer, BasicNodeComponent> nodeComponentHashMap;
     private final List<Edge> edgeList;
 
-    public EditorPanel(iTree<iNode> NodeTree)
+    public EditorPanel(iTree NodeTree)
     {
         setPreferredSize(new Dimension(5000, 5000));
         nodeComponentHashMap = new HashMap<>();
