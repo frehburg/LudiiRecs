@@ -125,4 +125,15 @@ public class FileUtils {
         }
         return null;
     }
+
+    public static Scanner readFile(File f) {
+        try {
+            Scanner sc = new Scanner(f);
+            return sc;
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

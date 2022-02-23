@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class GetAllKeywords {
@@ -13,7 +14,7 @@ public class GetAllKeywords {
         getAllKeywords();
     }
     public static void getAllKeywords() {
-        Scanner sc = FileUtils.readFile("C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\src\\main\\resources\\ludii-grammar-1.2.11.txt");
+        Scanner sc = FileUtils.readFile("src\\main\\resources\\ludii-grammar-1.2.11.txt");
         ArrayList<String> keywords = new ArrayList<>();
         String line = "";
         while(sc.hasNextLine()) {
@@ -69,10 +70,18 @@ public class GetAllKeywords {
             }
         }
         sc.close();
+        //sort
+        keywords.sort(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.charAt(0) - o2.charAt(0);
+            }
+        });
         System.out.println("-------------------------------------------------------------");
         for (String s : keywords) {
             System.out.println(s);
         }
+        //
         FileWriter fw = FileUtils.writeFile("C:\\Users\\filre\\OneDrive\\Documents\\IntelliJ\\LudiiRecs\\src\\main\\resources\\allKeywords.txt");
         for (String s : keywords) {
             try {
